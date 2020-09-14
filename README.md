@@ -17,7 +17,7 @@ A good example of where you might want extra styles within your template is when
 ## Installation
 
 ```
-composer require jellygnite/silverstripe-elemental-style:dev-master
+composer require jellygnite/silverstripe-elemental-style
 ```
 
 
