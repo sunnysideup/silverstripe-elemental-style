@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Add as many style dropdown as you like to any element via a YML file. 
+Add as many style dropdown fields as you like to any element via a YML file. 
 
 Styles are grouped by location. This allows you to insert CSS classes into various positions in your template other than just the holding container. 
 
