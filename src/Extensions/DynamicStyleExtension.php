@@ -1,10 +1,6 @@
 <?php
 
 namespace Jellygnite\ElementalStyle\Extensions;
-// 	ElementalArea 
-//		has_many Elements => BaseElement::class 
-//			has_many
-//			many_many BaseElementObject::class
 
 use Jellygnite\ElementalStyle\Model\StyleObject;
 use SilverStripe\ORM\ArrayList;
@@ -56,9 +52,7 @@ class DynamicStyleExtension extends DataExtension
 		
 		// remove any that don't exist in config (incase of updates)
 		$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
-		
-//				Debug::show( print_r($arr_extrastyle_styleobjects,true));
-		
+				
 		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
 			foreach($arr_config_styleobjects as $styleobject){
 				$index = $styleobject->getIndex();
