@@ -1,0 +1,8 @@
+---
+Name: jellygnite-elementalstyle
+---
+DNADesign\Elemental\Models\BaseElement:
+  extensions:
+    - Jellygnite\ElementalStyle\Extensions\DynamicStyleExtension
+
+
