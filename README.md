@@ -17,7 +17,7 @@ A good example of where you might want extra styles within your template is when
 ## Installation
 
 ```
-composer require jellygnite/elemental-style 4.x-dev
+composer require jellygnite/silverstripe-elemental-style:dev-master
 ```
 
 
@@ -129,3 +129,4 @@ Namespace\YourElement:
   extra_styles:
     MarginTop: null
 
+```
