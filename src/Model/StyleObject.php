@@ -12,6 +12,7 @@ use SilverStripe\Dev\Debug;
  * @property string $Tab
  * @property string $Location
  * @property array $Styles
+ * @property integer $Sort		// optional to move items to top or bottom of list
  *
  * @method string getIndex()
  * @method string getTitle()
@@ -39,6 +40,7 @@ class StyleObject implements \JsonSerializable {
 		'Tab' => null,
 		'Location' => null,
 		'Styles' => [],		
+		'Sort' => 100,
 	];
 
     public function __construct(String $index, Array $arr_object = [])
@@ -53,6 +55,7 @@ class StyleObject implements \JsonSerializable {
         $this->tab = $arr_style['Tab'];
         $this->location = $arr_style['Location'];
         $this->styles = $arr_style['Styles'];
+        $this->sort = $arr_style['Sort'];
     }
 
     public function jsonSerialize()
@@ -84,6 +87,9 @@ class StyleObject implements \JsonSerializable {
 	}
 	public function getStyles(){
 		return $this->styles;
+	}
+	public function getSort(){
+		return $this->sort;
 	}
 	
 	
