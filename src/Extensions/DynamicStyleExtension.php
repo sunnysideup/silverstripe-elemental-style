@@ -145,7 +145,8 @@ class DynamicStyleExtension extends DataExtension
 				}
 			}
 		}
-		usort($arr_styleobjects, function($a, $b) {return strcmp($a->getSort(), $b->getSort());});
+		// not working properly yet - affecting the save
+//		usort($arr_styleobjects, function($a, $b) {return strcmp($a->getSort(), $b->getSort());});
 		return $arr_styleobjects;
 	}
 	
