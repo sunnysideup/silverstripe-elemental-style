@@ -37,8 +37,8 @@ class DynamicStyleExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields) {
 		
-		$default_tab_name = self::$default_tab_name;
-		$default_tab_title = self::$default_tab_title;
+		$default_tab_name = $this->getOwner()->config()->get('default_tab_name');
+		$default_tab_title = $this->getOwner()->config()->get('default_tab_title'); 
 		
 		if(!$tab_field = $fields->fieldByName('Root.' . $default_tab_name)) {
 			$tab_field = $fields->insertAfter(Tab::create($default_tab_name, $default_tab_title), 'Settings');
@@ -170,7 +170,11 @@ class DynamicStyleExtension extends DataExtension
      */	
 	public function hasCustomCSSClass($cssclass){
 		//$haystack = $this->owner->ExtraClass. ' ' . $this->owner->Style;
-		$haystack = $this->owner->getStyleVariant();
+		if(method_exists ( $this->owner , 'getStyleVariant' )){
+			$haystack = $this->owner->getStyleVariant();
+		} else {
+			$haystack = $this->getStyleByLocation();
+		}
 		return ((((strpos($haystack, $cssclass )) ) !== false));
 	}
 	
