@@ -314,9 +314,8 @@ class DynamicStyleExtension extends DataExtension
 					$new_extra_style_values[$index] = $new_object;
 				}				
 			}
-			if(!empty($new_extra_style_values)){
-				$extra_style_values = $new_extra_style_values;
-			}
+			
+			$extra_style_values = $new_extra_style_values;
 		} 
 		
 		$this->owner->ExtraStyle = json_encode($extra_style_values);
