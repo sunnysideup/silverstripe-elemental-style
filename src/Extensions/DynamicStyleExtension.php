@@ -67,7 +67,7 @@ class DynamicStyleExtension extends DataExtension
 					$styleDropdown = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldOptions), $fieldValue); 
 					$styleDropdown->setRightTitle($styleobject->getDescription());
 					
-					$styleDropdown->setEmptyString(_t(__CLASS__.'.EXTRA_STYLES', 'Please select...'));
+					$styleDropdown->setEmptyString($this->getEmptyString($fieldOptions));
 					
 					$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
 					if(!empty($tabName)) {
@@ -90,6 +90,24 @@ class DynamicStyleExtension extends DataExtension
 
     }
 
+	/**
+	* search fieldoptions array for empty value and use key as label. 
+	*
+	* @return array
+	*/	
+	protected function getEmptyString($fieldOptions)
+	{
+		$emptystring =  _t(__CLASS__.'.EXTRA_STYLES', 'Please select...');
+		foreach($fieldOptions as $key=>$value){
+			if(empty($value)) {
+				$emptystring = $key;
+				break;
+			}
+		}
+				
+		return $emptystring;
+	}
+	
 	/**
 	* Get all styles saved to ExtraStyle data field
 	*
