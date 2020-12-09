@@ -1,5 +1,6 @@
 ---
 Name: jellygnite-elementalstyle
+After: jellygnite-elements
 ---
 DNADesign\Elemental\Models\BaseElement:
   extensions:
