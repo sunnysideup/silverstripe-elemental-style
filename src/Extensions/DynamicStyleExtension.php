@@ -182,16 +182,22 @@ class DynamicStyleExtension extends DataExtension
 	}
 
     /**
-     * Check if this element contains a CSS class
+     * Check if this element contains a CSS class, can pass a location if needed
+     *
+     * To do : search array converted from string to prevent false positives
      *
      * @return boolean
      */	
-	public function hasCustomCSSClass($cssclass){
+	public function hasCustomCSSClass($cssclass, $location = false){
 		//$haystack = $this->owner->ExtraClass. ' ' . $this->owner->Style;
-		if(method_exists ( $this->owner , 'getStyleVariant' )){
-			$haystack = $this->owner->getStyleVariant();
+		if($location){
+			$haystack = $this->getStyleByLocation($location);
 		} else {
-			$haystack = $this->getStyleByLocation();
+			if(method_exists ( $this->owner , 'getStyleVariant' )){
+				$haystack = $this->owner->getStyleVariant();
+			} else {
+				$haystack = $this->getStyleByLocation();
+			}
 		}
 		return ((((strpos($haystack, $cssclass )) ) !== false));
 	}
