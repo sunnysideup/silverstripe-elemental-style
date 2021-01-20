@@ -19,6 +19,8 @@ use SilverStripe\Dev\Debug;
 class DynamicStyleExtension extends DataExtension 
 {
 
+	private $is_duplicate = false;
+	
 	private static $default_location = 'default';
 	
 	// add extra style dropdowns to this tab
@@ -59,7 +61,7 @@ class DynamicStyleExtension extends DataExtension
 				$fieldName = self::getStyleFieldName($index);
 				$fieldTitle = $styleobject->getTitle();
 				$fieldOptions = $styleobject->getStyles();
-				
+				$fieldAfter = $styleobject->getAfter();
 				if(!empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
@@ -75,10 +77,14 @@ class DynamicStyleExtension extends DataExtension
 							$fields->insertAfter(Tab::create($tabName), 'Settings');
 						}			
 					}
-					$fields->addFieldToTab(
-						'Root.'. $tabName,
-						$styleDropdown 
-					);
+					if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
+						$fields->insertAfter($styleDropdown,$fieldAfter);
+					} else {
+						$fields->addFieldToTab(
+							'Root.'. $tabName,
+							$styleDropdown 
+						);
+					}
 				}
 			}
 			$fields->addFieldToTab(
@@ -303,6 +309,10 @@ class DynamicStyleExtension extends DataExtension
     {
         parent::onBeforeWrite();
 		
+		if($this->is_duplicate){
+			return;
+		}
+		
 		$bool_process = false;
 		$request = Controller::curr()->getRequest();
 		$postVars = $request->postVars();
@@ -346,4 +356,10 @@ class DynamicStyleExtension extends DataExtension
 		
     }
 
+	public function onBeforeDuplicate($original) {
+		$clone = $this->owner;
+		$this->is_duplicate = true;
+		$clone->ExtraStyle = $original->ExtraStyle;
+		return $clone;
+	}
 }

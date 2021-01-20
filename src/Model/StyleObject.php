@@ -31,6 +31,7 @@ class StyleObject implements \JsonSerializable {
 	protected $description;
 	protected $tab;
 	protected $location;
+	protected $after;	// insert field after
 	protected $styles;
 	
 	
@@ -39,6 +40,7 @@ class StyleObject implements \JsonSerializable {
 		'Description' => null,
 		'Tab' => null,
 		'Location' => null,
+		'After' => null,
 		'Styles' => [],		
 		'Sort' => 100,
 	];
@@ -54,6 +56,7 @@ class StyleObject implements \JsonSerializable {
         $this->description = $arr_style['Description'];
         $this->tab = $arr_style['Tab'];
         $this->location = $arr_style['Location'];
+        $this->after = $arr_style['After'];
         $this->styles = $arr_style['Styles'];
         $this->sort = $arr_style['Sort'];
     }
@@ -66,6 +69,7 @@ class StyleObject implements \JsonSerializable {
              'Description' => $this->getDescription(),
              'Tab' => $this->getTab(),
              'Location' => $this->getLocation(),
+             'After' => $this->getAfter(),
              'Styles' => $this->getStyles(),
         );
     }
@@ -84,6 +88,9 @@ class StyleObject implements \JsonSerializable {
 	}
 	public function getLocation(){
 		return $this->location;
+	}
+	public function getAfter(){
+		return $this->after;
 	}
 	public function getStyles(){
 		return $this->styles;

@@ -23,6 +23,17 @@ composer require jellygnite/silverstripe-elemental-style
 
 ## Example configurations
 
+Include the following information in your config:
+
+'Index'       : Unique identifier for the style field
+'Title'       : Label for the style field
+'Description' : Optional brief description
+'Location'    : Use this style in a different location in the template
+'Tab'         : Name of the Tab to add the style field to
+'After'       : or, the name of the existing field to add the style field after
+'Styles'      : Array of styles to appear in the style field ['title' => 'css classes']
+
+
 ### Method 1
 
 You can add extra styles to your individual Elements, e.g.
