@@ -356,10 +356,7 @@ class DynamicStyleExtension extends DataExtension
 		
     }
 
-	public function onBeforeDuplicate($original) {
-		$clone = $this->owner;
+	public function onBeforeDuplicate() {
 		$this->is_duplicate = true;
-		$clone->ExtraStyle = $original->ExtraStyle;
-		return $clone;
 	}
 }
