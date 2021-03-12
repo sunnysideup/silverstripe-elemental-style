@@ -90,8 +90,8 @@ class DynamicStyleExtension extends DataExtension
 				}
 			}
 			$fields->addFieldToTab(
-				'Root.Main',
-				TextField::create('ExtraStyle','ExtraStyle')//->setReadonly(true)
+				'Root.' . $default_tab_name,
+				TextField::create('ExtraStyle','ExtraStyle')->setReadonly(true)
 			);
 		}
 		
