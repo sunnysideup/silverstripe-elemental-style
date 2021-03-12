@@ -15,6 +15,8 @@ use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Forms\EditFormFactory;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Injector\Injector;
+use Psr\Log\LoggerInterface;
 
 class DynamicStyleExtension extends DataExtension 
 {
@@ -88,8 +90,8 @@ class DynamicStyleExtension extends DataExtension
 				}
 			}
 			$fields->addFieldToTab(
-				'Root.' . $default_tab_name,
-				ReadonlyField::create('ExtraStyle','ExtraStyle')
+				'Root.Main',
+				TextField::create('ExtraStyle','ExtraStyle')//->setReadonly(true)
 			);
 		}
 		
@@ -304,7 +306,7 @@ class DynamicStyleExtension extends DataExtension
 		
 			
     }
-  	
+
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -316,7 +318,8 @@ class DynamicStyleExtension extends DataExtension
 		$bool_process = false;
 		$request = Controller::curr()->getRequest();
 		$postVars = $request->postVars();
-
+		//		Injector::inst()->get(LoggerInterface::class)->warning($this->owner->ID." | ". $this->owner->Title  . " | postVars: ". print_r($postVars,true));
+		
 		$arr_config_styleobjects = $this->getConfigStyleObjects();
 		
 		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
@@ -325,9 +328,13 @@ class DynamicStyleExtension extends DataExtension
 		} else {
 			$extra_style_values = [];
 		}
+		
+		
+		$extra_style_values = array_intersect_key($extra_style_values,$arr_config_styleobjects);
 
 		if ($bool_process) {
-			$new_extra_style_values = [];
+			// start off with existing extra_style_values
+			$new_extra_style_values = $extra_style_values;
 			foreach($arr_config_styleobjects as $styleobject){
 				$index = $styleobject->getIndex();
 				$defaultFieldName = self::getStyleFieldName($index);
@@ -345,6 +352,7 @@ class DynamicStyleExtension extends DataExtension
 								'Selected' =>  $post_value,
 							]
 					];
+					// update array value or create new
 					$new_extra_style_values[$index] = $new_object;
 				}				
 			}
