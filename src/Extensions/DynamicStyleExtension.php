@@ -68,10 +68,10 @@ class DynamicStyleExtension extends DataExtension
 				$fieldStyles = $styleobject->getStyles();
 				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
-				if(!empty($fieldStyles)){
+				if(!empty($fieldStyles) || !empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
-					
+					$styleFormField = null;
 					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
 						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
 						// for now jsut use right title even though Description also sets this
@@ -93,20 +93,21 @@ class DynamicStyleExtension extends DataExtension
 						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
 
 					} // end if options
-					
-					$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
-					if(!empty($tabName)) {
-						if(!$fields->fieldByName('Root.'.$tabName)) {
-							$fields->insertAfter(Tab::create($tabName), 'Settings');
-						}			
-					}
-					if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
-						$fields->insertAfter($styleFormField,$fieldAfter);
-					} else {
-						$fields->addFieldToTab(
-							'Root.'. $tabName,
-							$styleFormField 
-						);
+					if(!empty($styleFormField)){
+						$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
+						if(!empty($tabName)) {
+							if(!$fields->fieldByName('Root.'.$tabName)) {
+								$fields->insertAfter(Tab::create($tabName), 'Settings');
+							}			
+						}
+						if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
+							$fields->insertAfter($styleFormField,$fieldAfter);
+						} else {
+							$fields->addFieldToTab(
+								'Root.'. $tabName,
+								$styleFormField 
+							);
+						}
 					}
 				}
 			}
