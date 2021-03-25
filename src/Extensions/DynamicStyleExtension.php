@@ -305,7 +305,7 @@ class DynamicStyleExtension extends DataExtension
 		
 		// remove any that don't exist in config (incase of updates)
 		if(is_array($arr_extrastyle_styleobjects) && is_array($arr_config_styleobjects)){
-		$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+			$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
 		}
 		
 
@@ -434,7 +434,7 @@ class DynamicStyleExtension extends DataExtension
 				} elseif(array_key_exists($defaultFieldName, $postVars)) {
 					$post_value =  $postVars[$defaultFieldName];
 				}
-				if(!empty($post_value)){
+				if( (!empty($post_value)) || ($post_value=='0') ){
 					$new_object = [
 							'Location' => $styleobject->getLocation(),
 							'Styles' => [
