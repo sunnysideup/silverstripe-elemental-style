@@ -421,6 +421,7 @@ class DynamicStyleExtension extends DataExtension
 		}
 
 		if ($bool_process) {
+					
 			// start off with existing extra_style_values
 			$new_extra_style_values = $extra_style_values;
 			foreach($arr_config_styleobjects as $styleobject){
@@ -442,7 +443,12 @@ class DynamicStyleExtension extends DataExtension
 					];
 					// update array value or create new
 					$new_extra_style_values[$index] = $new_object;
-				}				
+				} else {
+					// remove this item from array as value is empty
+					if(array_key_exists($index, $new_extra_style_values)){
+						unset(	$new_extra_style_values[$index] );
+					}
+				}
 			}
 			
 			$extra_style_values = $new_extra_style_values;
