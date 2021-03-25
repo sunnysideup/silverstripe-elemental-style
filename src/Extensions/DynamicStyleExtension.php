@@ -3,6 +3,7 @@
 namespace Jellygnite\ElementalStyle\Extensions;
 
 use Jellygnite\ElementalStyle\Model\StyleObject;
+use Jellygnite\SliderField\SliderField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FieldList;
@@ -20,7 +21,7 @@ use Psr\Log\LoggerInterface;
 
 class DynamicStyleExtension extends DataExtension 
 {
-
+	
 	private $is_duplicate = false;
 	
 	private static $default_location = 'default';
@@ -45,7 +46,7 @@ class DynamicStyleExtension extends DataExtension
 		$default_tab_title = $this->getOwner()->config()->get('default_tab_title'); 
 		
 		if(!$tab_field = $fields->fieldByName('Root.' . $default_tab_name)) {
-			$tab_field = $fields->insertAfter(Tab::create($default_tab_name, $default_tab_title), 'Settings');
+			$tab_field = $fields->findOrMakeTab('Root.' . $default_tab_name, $default_tab_title);
 		}
 		$tab_field->setTitle($default_tab_title);
 
@@ -55,23 +56,43 @@ class DynamicStyleExtension extends DataExtension
 		$arr_extrastyle_styleobjects = $this->getExtraStyleObjects();
 		
 		// remove any that don't exist in config (incase of updates)
-		$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+		if(is_array($arr_extrastyle_styleobjects) && is_array($arr_config_styleobjects)){
+			$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+		}
 				
 		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
 			foreach($arr_config_styleobjects as $styleobject){
 				$index = $styleobject->getIndex();
 				$fieldName = self::getStyleFieldName($index);
 				$fieldTitle = $styleobject->getTitle();
-				$fieldOptions = $styleobject->getStyles();
+				$fieldStyles = $styleobject->getStyles();
+				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
-				if(!empty($fieldOptions)){
+				if(!empty($fieldStyles)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
-				
-					$styleDropdown = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldOptions), $fieldValue); 
-					$styleDropdown->setRightTitle($styleobject->getDescription());
 					
-					$styleDropdown->setEmptyString($this->getEmptyString($fieldOptions));
+					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
+						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
+						// for now jsut use right title even though Description also sets this
+						if(array_key_exists('Unit',$fieldOptions) && !empty($fieldOptions['Unit'])){
+							$styleFormField->setRightTitle($fieldOptions['Unit']);
+						}
+						if(array_key_exists('Step',$fieldOptions) && !empty($fieldOptions['Step'])){
+							$styleFormField->setStep($fieldOptions['Step']);
+						}
+						if($styleobject->getDescription()){
+							$styleFormField->setDescription($styleobject->getDescription());
+						}
+					} else {
+						
+					
+						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
+						$styleFormField->setRightTitle($styleobject->getDescription());
+						
+						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
+
+					} // end if options
 					
 					$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
 					if(!empty($tabName)) {
@@ -80,11 +101,11 @@ class DynamicStyleExtension extends DataExtension
 						}			
 					}
 					if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
-						$fields->insertAfter($styleDropdown,$fieldAfter);
+						$fields->insertAfter($styleFormField,$fieldAfter);
 					} else {
 						$fields->addFieldToTab(
 							'Root.'. $tabName,
-							$styleDropdown 
+							$styleFormField 
 						);
 					}
 				}
@@ -99,14 +120,14 @@ class DynamicStyleExtension extends DataExtension
     }
 
 	/**
-	* search fieldoptions array for empty value and use key as label. 
+	* search fieldstyles array for empty value and use key as label. 
 	*
 	* @return array
 	*/	
-	protected function getEmptyString($fieldOptions)
+	protected function getEmptyString($fieldStyles)
 	{
 		$emptystring =  _t(__CLASS__.'.EXTRA_STYLES', 'Please select...');
-		foreach($fieldOptions as $key=>$value){
+		foreach($fieldStyles as $key=>$value){
 			if(empty($value)) {
 				$emptystring = $key;
 				break;
@@ -127,14 +148,49 @@ class DynamicStyleExtension extends DataExtension
 	}	
 	
 	/**
+	* Extension point to allow element or object to update styles programatically
+	*
+	* @return array
+	e.g.
+	public function updateConfigStyles($config_styles)  {
+		
+		// this will override the `Background` style
+		$extra_styles = [
+			'Background' => [
+				'Title' => 'Background',
+				'Description' => '',
+				'Styles' => [
+					'Inherit' => '',
+					'White'=> 'bg-white',
+				]
+			],
+		];
+		if(is_array($config_styles)){
+			$config_styles = array_merge($config_styles,$extra_styles);
+		}
+		return $config_styles;
+
+	}
+	*/	
+	public function updateConfigStyles($config_styles)  {
+		return $config_styles;
+	}
+	
+
+	/**
 	* Get all styles from config
 	*
 	* @return array
 	*/	
 	protected function getConfigStyles()
 	{
-		return $this->getOwner()->config()->get('extra_styles');
+		$config_styles = $this->getOwner()->config()->get('extra_styles');
+		$config_styles = $this->getOwner()->updateConfigStyles($config_styles);
+		
+
+		return $config_styles;
 	}
+	
 	/**
 	* Get all styles from config as array of StyleObject::class
 	*
@@ -235,6 +291,33 @@ class DynamicStyleExtension extends DataExtension
     }
 
 
+
+	public function getStyleByID($id = null) 
+	{
+		
+		$extra_css_classes = [];
+		$config_styles = $this->getConfigStyles();
+		$extra_style_value = $this->getExtraStyles(); 
+		
+		$arr_config_styleobjects = self::array_to_styleobjects($config_styles);
+		$arr_extrastyle_styleobjects = self::array_to_styleobjects($extra_style_value);
+		
+		// remove any that don't exist in config (incase of updates)
+		if(is_array($arr_extrastyle_styleobjects) && is_array($arr_config_styleobjects)){
+		$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+		}
+		
+
+		if (is_array($arr_extrastyle_styleobjects) 
+			&& count($arr_extrastyle_styleobjects) > 0 
+			&& array_key_exists($id,$arr_extrastyle_styleobjects) 
+			) {
+			return $arr_extrastyle_styleobjects[$id]->getSelected();
+		}
+		return null;
+		
+	}
+	
     /**
      * Get a user defined style variant for this element, if available
      *
@@ -251,7 +334,10 @@ class DynamicStyleExtension extends DataExtension
 		$arr_extrastyle_styleobjects = self::array_to_styleobjects($extra_style_value);
 		
 		// remove any that don't exist in config (incase of updates)
+		if(is_array($arr_extrastyle_styleobjects) && is_array($arr_config_styleobjects)){
 		$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+		}
+		
 
 		if (is_array($arr_extrastyle_styleobjects) && count($arr_extrastyle_styleobjects) > 0) {
 			foreach($arr_extrastyle_styleobjects as $styleobject){
@@ -329,8 +415,9 @@ class DynamicStyleExtension extends DataExtension
 			$extra_style_values = [];
 		}
 		
-		
-		$extra_style_values = array_intersect_key($extra_style_values,$arr_config_styleobjects);
+		if(is_array($extra_style_values) && is_array($arr_config_styleobjects)){
+			$extra_style_values = array_intersect_key($extra_style_values,$arr_config_styleobjects);
+		}
 
 		if ($bool_process) {
 			// start off with existing extra_style_values

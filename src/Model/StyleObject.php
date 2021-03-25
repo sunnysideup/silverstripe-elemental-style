@@ -33,6 +33,7 @@ class StyleObject implements \JsonSerializable {
 	protected $location;
 	protected $after;	// insert field after
 	protected $styles;
+	protected $options; // use this to create other form fields
 	
 	
 	private static $arr_default = [
@@ -43,6 +44,7 @@ class StyleObject implements \JsonSerializable {
 		'After' => null,
 		'Styles' => [],		
 		'Sort' => 100,
+		'Options' => [],		
 	];
 
     public function __construct(String $index, Array $arr_object = [])
@@ -59,6 +61,7 @@ class StyleObject implements \JsonSerializable {
         $this->after = $arr_style['After'];
         $this->styles = $arr_style['Styles'];
         $this->sort = $arr_style['Sort'];
+        $this->options = $arr_style['Options'];
     }
 
     public function jsonSerialize()
@@ -94,6 +97,9 @@ class StyleObject implements \JsonSerializable {
 	}
 	public function getStyles(){
 		return $this->styles;
+	}
+	public function getOptions(){
+		return $this->options;
 	}
 	public function getSort(){
 		return $this->sort;

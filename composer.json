@@ -10,7 +10,8 @@
     "require": {
         "silverstripe/framework": "^4.0",
         "silverstripe/admin": "^1.0",
-        "dnadesign/silverstripe-elemental": "^4.0"		
+        "dnadesign/silverstripe-elemental": "^4.0",
+        "jellygnite/silverstripe-sliderfield": "^4.0",	
     },
     "autoload": {
         "psr-4": {
