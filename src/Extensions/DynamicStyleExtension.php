@@ -445,7 +445,7 @@ class DynamicStyleExtension extends DataExtension
 					$new_extra_style_values[$index] = $new_object;
 				} else {
 					// remove this item from array as value is empty
-					if(array_key_exists($index, $new_extra_style_values)){
+					if(is_array( $new_extra_style_values) && array_key_exists($index, $new_extra_style_values)){
 						unset(	$new_extra_style_values[$index] );
 					}
 				}
