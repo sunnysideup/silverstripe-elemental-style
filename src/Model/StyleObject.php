@@ -34,6 +34,8 @@ class StyleObject implements \JsonSerializable {
 	protected $after;	// insert field after
 	protected $styles;
 	protected $options; // use this to create other form fields
+	protected $prefix;
+	protected $suffix;
 	
 	
 	private static $arr_default = [
@@ -44,7 +46,9 @@ class StyleObject implements \JsonSerializable {
 		'After' => null,
 		'Styles' => [],		
 		'Sort' => 100,
-		'Options' => [],		
+		'Options' => [],	
+		'Prefix' => null,
+		'Suffix' => null,	
 	];
 
     public function __construct(String $index, Array $arr_object = [])
@@ -62,6 +66,8 @@ class StyleObject implements \JsonSerializable {
         $this->styles = $arr_style['Styles'];
         $this->sort = $arr_style['Sort'];
         $this->options = $arr_style['Options'];
+        $this->prefix = $arr_style['Prefix'];
+        $this->suffix = $arr_style['Suffix'];
     }
 
     public function jsonSerialize()
@@ -104,12 +110,27 @@ class StyleObject implements \JsonSerializable {
 	public function getSort(){
 		return $this->sort;
 	}
+	public function getPrefix(){
+		return $this->prefix;
+	}
+	public function getSuffix(){
+		return $this->suffix;
+	}
 	
-	
+	// return selected value
 	public function getSelected(){
 		$styles = $this->getStyles();
 		if(is_array($styles) && array_key_exists('Selected', $styles)){
 			return $styles['Selected'];
+		}
+		return null;
+	}
+
+	// return selected value nicely formatted
+	public function getFormattedSelected(){
+		$selected = $this->getSelected();
+		if($selected){
+			return $this->getPrefix() . $selected . $this->getSuffix();			
 		}
 		return null;
 	}

@@ -5,13 +5,14 @@ namespace Jellygnite\ElementalStyle\Extensions;
 use Jellygnite\ElementalStyle\Model\StyleObject;
 use Jellygnite\SliderField\SliderField;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataExtension;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Forms\EditFormFactory;
 use SilverStripe\Control\Controller;
@@ -89,11 +90,17 @@ class DynamicStyleExtension extends DataExtension
 					
 						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
 						$styleFormField->setRightTitle($styleobject->getDescription());
-						
 						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
 
 					} // end if options
 					if(!empty($styleFormField)){
+						
+						$styleFormField->setAttribute('data-extrastyle','true');
+						$styleFormField->setAttribute('data-es-index',$styleobject->getIndex());
+						$styleFormField->setAttribute('data-es-location',$styleobject->getLocation());
+						$styleFormField->setAttribute('data-es-prefix',$styleobject->getPrefix());
+						$styleFormField->setAttribute('data-es-suffix',$styleobject->getSuffix());
+						
 						$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
 						if(!empty($tabName)) {
 							if(!$fields->fieldByName('Root.'.$tabName)) {
@@ -111,9 +118,12 @@ class DynamicStyleExtension extends DataExtension
 					}
 				}
 			}
-			$fields->addFieldToTab(
+			$fields->addFieldsToTab(
 				'Root.' . $default_tab_name,
-				TextField::create('ExtraStyle','ExtraStyle')->setReadonly(true)
+				[
+					HiddenField::create('ExtraStyle','ExtraStyle'),
+					TextField::create('ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
+				]
 			);
 		}
 		
@@ -254,12 +264,12 @@ class DynamicStyleExtension extends DataExtension
      * @return boolean
      */	
 	public function hasCustomCSSClass($cssclass, $location = false){
-		//$haystack = $this->owner->ExtraClass. ' ' . $this->owner->Style;
+		//$haystack = $this->getOwner()->ExtraClass. ' ' . $this->getOwner()->Style;
 		if($location){
 			$haystack = $this->getStyleByLocation($location);
 		} else {
-			if(method_exists ( $this->owner , 'getStyleVariant' )){
-				$haystack = $this->owner->getStyleVariant();
+			if(method_exists ( $this->getOwner() , 'getStyleVariant' )){
+				$haystack = $this->getOwner()->getStyleVariant();
 			} else {
 				$haystack = $this->getStyleByLocation();
 			}
@@ -274,7 +284,7 @@ class DynamicStyleExtension extends DataExtension
      */		
     public function getBaseClassName()
     {	
-		$classname = $this->owner->ClassName;
+		$classname = $this->getOwner()->ClassName;
         $classParts = explode('\\', $classname);
         return array_pop($classParts);
     }
@@ -286,7 +296,7 @@ class DynamicStyleExtension extends DataExtension
      */		
     public function getDefaultCssClass()
     {
-		$default_css_class = $this->owner->config()->get('default_css_class');
+		$default_css_class = $this->getOwner()->config()->get('default_css_class');
  		$default_css_class = strtolower($default_css_class);
         return $default_css_class;
     }
@@ -313,7 +323,7 @@ class DynamicStyleExtension extends DataExtension
 			&& count($arr_extrastyle_styleobjects) > 0 
 			&& array_key_exists($id,$arr_extrastyle_styleobjects) 
 			) {
-			return $arr_extrastyle_styleobjects[$id]->getSelected();
+			return $arr_extrastyle_styleobjects[$id]->getFormattedSelected();
 		}
 		return null;
 		
@@ -346,7 +356,7 @@ class DynamicStyleExtension extends DataExtension
 					( $styleobject->getLocation() == $location ) || 
 					( empty($location) && empty($styleobject->getLocation()) ) 
 				){
-					$extra_css_classes[] = $styleobject->getSelected();
+					$extra_css_classes[] = $styleobject->getFormattedSelected();
 				}
 			}
 			return implode(' ', $extra_css_classes);
@@ -378,11 +388,11 @@ class DynamicStyleExtension extends DataExtension
 		$extra_css_classes[] = $style;
 		
 		// add base class name
-		$extra_css_classes[] = strtolower($this->owner->getBaseClassName());
+		$extra_css_classes[] = strtolower($this->getOwner()->getBaseClassName());
 		// add default css class 
-		$extra_css_classes[] = strtolower($this->owner->getDefaultCssClass());
+		$extra_css_classes[] = strtolower($this->getOwner()->getDefaultCssClass());
 		// add extra css class to end of list
-		$extra_css_classes[] = strtolower($this->owner->ExtraClass);
+		$extra_css_classes[] = strtolower($this->getOwner()->ExtraClass);
 		// add extra styles with null location
 		$extra_css_classes[] = $this->getStyleByLocation();
 
@@ -393,7 +403,8 @@ class DynamicStyleExtension extends DataExtension
 		
 			
     }
-
+/*
+// replaced this with javascript
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -405,12 +416,12 @@ class DynamicStyleExtension extends DataExtension
 		$bool_process = false;
 		$request = Controller::curr()->getRequest();
 		$postVars = $request->postVars();
-		//		Injector::inst()->get(LoggerInterface::class)->warning($this->owner->ID." | ". $this->owner->Title  . " | postVars: ". print_r($postVars,true));
+		//		Injector::inst()->get(LoggerInterface::class)->warning($this->getOwner()->ID." | ". $this->getOwner()->Title  . " | postVars: ". print_r($postVars,true));
 		
 		$arr_config_styleobjects = $this->getConfigStyleObjects();
 		
 		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
-			$extra_style_values = json_decode($this->owner->ExtraStyle, true);
+			$extra_style_values = json_decode($this->getOwner()->ExtraStyle, true);
 			$bool_process = true;
 		} else {
 			$extra_style_values = [];
@@ -427,7 +438,7 @@ class DynamicStyleExtension extends DataExtension
 			foreach($arr_config_styleobjects as $styleobject){
 				$index = $styleobject->getIndex();
 				$defaultFieldName = self::getStyleFieldName($index);
-				$namespacedFieldName = sprintf(EditFormFactory::FIELD_NAMESPACE_TEMPLATE, $this->owner->ID, $defaultFieldName);
+				$namespacedFieldName = sprintf(EditFormFactory::FIELD_NAMESPACE_TEMPLATE, $this->getOwner()->ID, $defaultFieldName);
 				$post_value = null;
 				if(array_key_exists($namespacedFieldName, $postVars)){
 					$post_value =  $postVars[$namespacedFieldName];
@@ -441,12 +452,21 @@ class DynamicStyleExtension extends DataExtension
 								'Selected' =>  $post_value,
 							]
 					];
+					if($prefix = $styleobject->getPrefix()){
+						$new_object['Prefix'] = $prefix;
+					}
+					if($suffix = $styleobject->getSuffix()){
+						$new_object['Suffix'] = $suffix;
+					}
+					
 					// update array value or create new
 					$new_extra_style_values[$index] = $new_object;
 				} else {
 					// remove this item from array as value is empty
+					// need to make sure the object wasn't published elsewhere so formfields won't exist
+					// jsut realised this is really bad because onbeforewrite can be called from anywhere and postvars may differ
 					if(is_array( $new_extra_style_values) && array_key_exists($index, $new_extra_style_values)){
-						unset(	$new_extra_style_values[$index] );
+//						unset(	$new_extra_style_values[$index] );
 					}
 				}
 			}
@@ -454,10 +474,16 @@ class DynamicStyleExtension extends DataExtension
 			$extra_style_values = $new_extra_style_values;
 		} 
 		
-		$this->owner->ExtraStyle = json_encode($extra_style_values);
+			
+		$this->getOwner()->ExtraStyle = json_encode($extra_style_values);
+		
+// this is the problem in SiteTree.php	
+        if ($this->getOwner()->hasMethod('setNextWriteWithoutVersion')) {
+			$this->getOwner()->setNextWriteWithoutVersion(false);
+		}	
 		
     }
-
+*/
 	public function onBeforeDuplicate() {
 		$this->is_duplicate = true;
 	}
