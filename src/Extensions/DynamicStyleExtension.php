@@ -35,6 +35,8 @@ class DynamicStyleExtension extends DataExtension
 
 	// assign a default CSS class for this object
     private static $default_css_class = '';
+	
+    private static $disable_chosen = false;
 
 
     private static $db = [
@@ -44,7 +46,8 @@ class DynamicStyleExtension extends DataExtension
     public function updateCMSFields(FieldList $fields) {
 		
 		$default_tab_name = $this->getOwner()->config()->get('default_tab_name');
-		$default_tab_title = $this->getOwner()->config()->get('default_tab_title'); 
+		$default_tab_title = $this->getOwner()->config()->get('default_tab_title');
+		$disable_chosen = $this->getOwner()->config()->get('disable_chosen'); 
 		
 		if(!$tab_field = $fields->fieldByName('Root.' . $default_tab_name)) {
 			$tab_field = $fields->findOrMakeTab('Root.' . $default_tab_name, $default_tab_title);
@@ -91,6 +94,9 @@ class DynamicStyleExtension extends DataExtension
 						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
 						$styleFormField->setRightTitle($styleobject->getDescription());
 						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
+						if($disable_chosen){
+							$styleFormField->addExtraClass('no-chosen');
+						}
 
 					} // end if options
 					if(!empty($styleFormField)){

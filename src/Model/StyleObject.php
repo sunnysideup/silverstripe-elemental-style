@@ -129,7 +129,7 @@ class StyleObject implements \JsonSerializable {
 	// return selected value nicely formatted
 	public function getFormattedSelected(){
 		$selected = $this->getSelected();
-		if($selected){
+		if(!empty($selected) || $selected==='0'){
 			return $this->getPrefix() . $selected . $this->getSuffix();			
 		}
 		return null;
