@@ -7,7 +7,5 @@ DNADesign\Elemental\Models\BaseElement:
   extensions:
     - Jellygnite\ElementalStyle\Extensions\DynamicStyleExtension
 SilverStripe\Admin\LeftAndMain:
-  extra_requirements_css:
-    - jellygnite/silverstripe-brandpad:client/dist/admin/css/bundle.css
   extra_requirements_javascript:
     - jellygnite/silverstripe-elemental-style:client/dist/javascript/bundle.js
