@@ -7,7 +7,7 @@
 					var currentValue = $extraStyleField.val();
 					var arrStyleObjects = [];
 					var stylesObject = new Object();
-					$('[data-extrastyle]').each(function(index, element) {
+					$(this).closest('form').find('[data-extrastyle]').each(function(index, element) {
 						let selectedValue = $(element).val();
 						let indexData = $(element).data('es-index');
 						let locationData = $(element).data('es-location');
