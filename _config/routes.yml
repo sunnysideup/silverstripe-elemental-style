@@ -1,0 +1,9 @@
+---
+Name: jesroutes
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'admin/jes//$Action!/': 'Jellygnite\ElementalStyle\Controller\AdminElementalStyleController'

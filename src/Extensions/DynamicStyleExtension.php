@@ -12,8 +12,10 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\ToggleCompositeField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\CompositeField;
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use DNADesign\Elemental\Forms\EditFormFactory;
 use SilverStripe\Control\Controller;
@@ -136,6 +138,117 @@ class DynamicStyleExtension extends DataExtension
 		
 
     }
+
+
+
+	public function getFrontEndFormFields() {
+				
+		$default_tab_name = $this->getOwner()->config()->get('default_tab_name');
+		$default_tab_title = $this->getOwner()->config()->get('default_tab_title');
+		$disable_chosen = $this->getOwner()->config()->get('disable_chosen'); 
+		
+		
+		$fieldNamePrefix = $this->owner->ID . '_';
+
+		$fields = FieldList::create();
+		$fields->push(TabSet::create($fieldNamePrefix.'Root')->addExtraClass('jes-switcher'));
+		$tab_field = $fields->findOrMakeTab($fieldNamePrefix.'Root.' . $default_tab_name, $default_tab_title);
+
+		$arr_config_styleobjects = $this->getConfigStyleObjects();
+		$arr_extrastyle_styleobjects = $this->getExtraStyleObjects();
+		
+		if(is_array($arr_extrastyle_styleobjects) && is_array($arr_config_styleobjects)){
+			$arr_extrastyle_styleobjects = array_intersect_key($arr_extrastyle_styleobjects,$arr_config_styleobjects);
+		}		
+//		Debug::show($arr_config_styleobjects);
+		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
+			foreach($arr_config_styleobjects as $styleobject){
+				$index = $styleobject->getIndex();
+				$fieldName = $fieldNamePrefix . self::getStyleFieldName($index);
+				$fieldTitle = $styleobject->getTitle();
+				$fieldStyles = $styleobject->getStyles();
+				$fieldOptions = $styleobject->getOptions();
+				$fieldAfter = $styleobject->getAfter();
+				if(!empty($fieldStyles) || !empty($fieldOptions)){
+					// fix this using objects?
+					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
+					$styleFormField = null;
+					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
+//						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
+						$styleFormField = TextField::create($fieldName, $fieldTitle, $fieldValue)
+							->setAttribute("type","range")
+							->setAttribute("min",$fieldOptions['Min'])
+							->setAttribute("max",$fieldOptions['Max'])
+							->addExtraClass('jes-slider');
+						// for now jsut use right title even though Description also sets this
+						if(array_key_exists('Unit',$fieldOptions) && !empty($fieldOptions['Unit'])){
+							$styleFormField->setRightTitle($fieldOptions['Unit']);
+						}
+						if(array_key_exists('Step',$fieldOptions) && !empty($fieldOptions['Step'])){
+				//			$styleFormField->setStep($fieldOptions['Step']);
+							$styleFormField->setAttribute("step",$fieldOptions['Step']);
+						}
+						if($styleobject->getDescription()){
+							$styleFormField->setDescription($styleobject->getDescription());
+						}
+					} else {
+						
+					
+						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
+						$styleFormField->setRightTitle($styleobject->getDescription());
+						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
+						if($disable_chosen){
+							$styleFormField->addExtraClass('no-chosen');
+						}
+
+					} // end if options
+					if(!empty($styleFormField)){
+						
+						$styleFormField->setAttribute('data-es-id',$this->owner->ID);
+						$styleFormField->setAttribute('data-extrastyle','true');
+						$styleFormField->setAttribute('data-es-index',$styleobject->getIndex());
+						$styleFormField->setAttribute('data-es-location',$styleobject->getLocation());
+						$styleFormField->setAttribute('data-es-prefix',$styleobject->getPrefix());
+						$styleFormField->setAttribute('data-es-suffix',$styleobject->getSuffix());
+						$styleFormField->setAttribute('name',null); // prevent field from being submitted.
+
+					
+						// using tabbed layout
+						$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
+						if(!empty($tabName)) {
+							if(!$fields->fieldByName($fieldNamePrefix.'Root.'.$tabName)) {
+								$fields->insertAfter(Tab::create($tabName), 'Settings');
+							}			
+						}
+						if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
+							$fields->insertAfter($styleFormField,$fieldAfter);
+						} else {
+							$fields->addFieldToTab(
+								$fieldNamePrefix.'Root.'. $tabName,
+								$styleFormField 
+							);
+						}
+						
+						// no tabs all fields in line
+						/*
+						$fields->push(
+							$styleFormField 
+						);
+						*/
+					}
+				}
+			}
+
+			$fields->push(
+				HiddenField::create($fieldNamePrefix.'ExtraStyle','ExtraStyle', $this->getOwner()->ExtraStyle)
+			);
+			$fields->push(
+				HiddenField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
+			);
+		}	
+		
+		return $fields;	
+	}
 
 	/**
 	* search fieldstyles array for empty value and use key as label. 
@@ -410,87 +523,7 @@ class DynamicStyleExtension extends DataExtension
 		
 			
     }
-/*
-// replaced this with javascript
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-		
-		if($this->is_duplicate){
-			return;
-		}
-		
-		$bool_process = false;
-		$request = Controller::curr()->getRequest();
-		$postVars = $request->postVars();
-		//		Injector::inst()->get(LoggerInterface::class)->warning($this->getOwner()->ID." | ". $this->getOwner()->Title  . " | postVars: ". print_r($postVars,true));
-		
-		$arr_config_styleobjects = $this->getConfigStyleObjects();
-		
-		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
-			$extra_style_values = json_decode($this->getOwner()->ExtraStyle, true);
-			$bool_process = true;
-		} else {
-			$extra_style_values = [];
-		}
-		
-		if(is_array($extra_style_values) && is_array($arr_config_styleobjects)){
-			$extra_style_values = array_intersect_key($extra_style_values,$arr_config_styleobjects);
-		}
 
-		if ($bool_process) {
-					
-			// start off with existing extra_style_values
-			$new_extra_style_values = $extra_style_values;
-			foreach($arr_config_styleobjects as $styleobject){
-				$index = $styleobject->getIndex();
-				$defaultFieldName = self::getStyleFieldName($index);
-				$namespacedFieldName = sprintf(EditFormFactory::FIELD_NAMESPACE_TEMPLATE, $this->getOwner()->ID, $defaultFieldName);
-				$post_value = null;
-				if(array_key_exists($namespacedFieldName, $postVars)){
-					$post_value =  $postVars[$namespacedFieldName];
-				} elseif(array_key_exists($defaultFieldName, $postVars)) {
-					$post_value =  $postVars[$defaultFieldName];
-				}
-				if( (!empty($post_value)) || ($post_value=='0') ){
-					$new_object = [
-							'Location' => $styleobject->getLocation(),
-							'Styles' => [
-								'Selected' =>  $post_value,
-							]
-					];
-					if($prefix = $styleobject->getPrefix()){
-						$new_object['Prefix'] = $prefix;
-					}
-					if($suffix = $styleobject->getSuffix()){
-						$new_object['Suffix'] = $suffix;
-					}
-					
-					// update array value or create new
-					$new_extra_style_values[$index] = $new_object;
-				} else {
-					// remove this item from array as value is empty
-					// need to make sure the object wasn't published elsewhere so formfields won't exist
-					// jsut realised this is really bad because onbeforewrite can be called from anywhere and postvars may differ
-					if(is_array( $new_extra_style_values) && array_key_exists($index, $new_extra_style_values)){
-//						unset(	$new_extra_style_values[$index] );
-					}
-				}
-			}
-			
-			$extra_style_values = $new_extra_style_values;
-		} 
-		
-			
-		$this->getOwner()->ExtraStyle = json_encode($extra_style_values);
-		
-// this is the problem in SiteTree.php	
-        if ($this->getOwner()->hasMethod('setNextWriteWithoutVersion')) {
-			$this->getOwner()->setNextWriteWithoutVersion(false);
-		}	
-		
-    }
-*/
 	public function onBeforeDuplicate() {
 		$this->is_duplicate = true;
 	}

@@ -1,0 +1,163 @@
+/* CSS Document */
+:root {
+--jes-offcanvas-width: 460px;
+--jes-offcanvas-bg-color: #222;
+
+
+--jes-field-color: #000;
+--jes-field-bg-color: #fff;
+--jes-field-border-color: #222;
+
+--jes-color-primary:#bdbdbd; /* text color */
+--jes-color-secondary:#fff; /* text color */
+
+}
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.jes { font-size: 15px; font-family: 'Lato', Arial, Helvetica, sans-serif; }
+
+.jes form { margin:0;padding:0; display: flex; flex-direction: column; justify-content: space-between; height: 100vh; }
+.jes fieldset { border:none; margin: 0; padding: 0; overflow-y: auto; overflow-x: hidden;}
+.jes .uk-offcanvas-close { top:4px; right: 20px; z-index:999; background: rgba(255, 255, 255, 0.25); }
+.jes .uk-offcanvas-close:hover { background: rgba(255, 255, 255, 0.5); }
+
+
+.jes-offcanvas-bar { width: var(--jes-offcanvas-width); padding: 0; overflow: hidden; background: var(--jes-offcanvas-bg-color); color: var(--jes-color-primary); }
+.jes-offcanvas-page :not(.uk-offcanvas-flip).uk-offcanvas-container-animation { left: var(--jes-offcanvas-width); }
+.jes.uk-open > .uk-offcanvas-reveal  {width: var(--jes-offcanvas-width);}
+
+
+.jes .jes-title { font-size: 1.125em; font-weight: bold; padding: 10px; background:#000; position: sticky; top:0; z-index: 999; margin-bottom:10px; color: var(--jes-color-secondary);}
+.jes .jes-fieldgroup .jes-title::after {font-size:10px;vertical-align:top;display:inline-block;margin-left:10px;text-transform:uppercase;color:#3CC;}
+.jes .jes-fieldgroup.draft .jes-title::after { content:"draft";} 
+.jes .jes-fieldgroup.modified .jes-title::after { content:"modified";}
+.jes .jes-fieldgroup.published .jes-title::after { content:"published";}
+
+
+.jes .field { display: flex;flex-wrap:wrap; }
+.jes .field label.left,
+.jes .field .middleColumn,
+.jes .field label.right,
+.jes .field span.description {  flex-basis: 100%;margin-bottom: 1%; }
+
+.jes .field select,
+.jes .field input { width: 100% }
+
+
+.jes .field label.left { font-weight: bold; }
+.jes .field label.right,
+.jes .field span.description { font-size: 13px; }
+
+.jes .tabset { padding: 0 10px }
+.jes .uk-tab li {   }
+
+
+.jes-edit body { transition: width 0.3s ease-in-out; width:100%; }
+.jes-edit.jes-offcanvas-page body { width: calc(100% - var(--jes-offcanvas-width));  }
+
+ 
+.jes-edit [data-jes-element] { position:relative;}
+[data-jes-element] .jes-edit-element { display: none; position:absolute; top:0; left:0; padding:10px; background: rgba(255,255,255,0.75); color: #000; pointer-events:auto; }
+.jes-edit [data-jes-element]:hover .jes-edit-element { display: block; }
+
+.jes-edit .jes-edit-hover { position:relative;}
+.jes-edit .jes-edit-hover::after { content:"";  }
+.jes-edit .jes-edit-holder { position:absolute; top:0; left:0; bottom:0; right:0; border: 2px dashed transparent; pointer-events:none;  }
+.jes-edit [data-jes-element]:hover .jes-edit-holder { border: 2px dashed #CCC; }
+.jes-edit .jes-edit-hover .jes-edit-holder {border: 2px dashed #666 !important;}
+
+
+.jes [data-jes-tab] { display:none } 
+
+.jes-button {display: inline-block;text-align: center;vertical-align: middle;background-color: #efefef;color: #333;padding: .3846rem .7692rem;font-size: 0.875em;font-weight: bold;text-transform:uppercase;font-family: 'Lato', Arial, Helvetica, sans-serif; line-height: 1.5384;border:none; outline:none; cursor:pointer; }
+.jes-button:hover { background-color: #CCC; }
+
+.jes .btn-toolbar { padding: 20px 10px; width: 100%; }
+.jes .btn-toolbar .jes-button { width: 30%; }
+
+.jes .jes-switcher ul { width: 100%;}
+.jes .jes-switcher .tab { display: none; }
+.jes .jes-switcher .tab.uk-active { display: block; }
+
+
+
+
+/* ========================================================================
+
+   Component: Form
+   
+ ========================================================================== */
+.jes-form input,
+.jes-form select,
+.jes-form textarea,
+.jes-form input[type="range"] + .jes-value {box-sizing:border-box;margin:0;border-radius:0;font-size: 13.3333px; }
+.jes-form textarea{resize:vertical}
+.jes-form select{text-transform:none}
+.jes-form input::-moz-focus-inner{border:0;padding:0}
+.jes-form input[type="checkbox"],input[type="radio"]{padding:0}
+.jes-form input[type="checkbox"]:not(:disabled),
+.jes-form input[type="radio"]:not(:disabled){cursor:pointer}
+.jes-form textarea,
+.jes-form input:not([type]),
+.jes-form input[type="text"],
+.jes-form input[type="password"],
+.jes-form input[type="email"],
+.jes-form input[type="url"],
+.jes-form input[type="search"],
+.jes-form input[type="tel"],
+.jes-form input[type="number"],
+.jes-form input[type="datetime"]{-webkit-appearance:none}
+.jes-form input[type="search"]::-webkit-search-cancel-button,
+.jes-form input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+.jes-form input[type="number"]::-webkit-inner-spin-button,
+.jes-form input[type="number"]::-webkit-outer-spin-button{height:auto}
+.jes-form button{cursor:pointer}
+
+.jes-form select,
+.jes-form textarea,
+.jes-form input:not([type]),
+.jes-form input[type="text"],
+.jes-form input[type="password"],
+.jes-form input[type="datetime"],
+.jes-form input[type="datetime-local"],
+.jes-form input[type="date"],
+.jes-form input[type="month"],
+.jes-form input[type="time"],
+.jes-form input[type="week"],
+.jes-form input[type="number"],
+.jes-form input[type="email"],
+.jes-form input[type="url"],
+.jes-form input[type="search"],
+.jes-form input[type="tel"],
+.jes-form input[type="color"]{width:100%;max-width:100%;padding:5px;border:none;border-radius:3px;border-color:var(--jes-field-border-color);background:var(--jes-field-bg-color);color:var(--jes-field-color);-webkit-transition:all .2s linear;-webkit-transition-property:border,background,color,box-shadow,padding;transition:all .2s linear;transition-property:border,background,color,box-shadow,padding}
+.jes-form select:focus,
+.jes-form textarea:focus,
+.jes-form input:not([type]):focus,
+.jes-form input[type="text"]:focus,
+.jes-form input[type="password"]:focus,
+.jes-form input[type="datetime"]:focus,
+.jes-form input[type="datetime-local"]:focus,
+.jes-form input[type="date"]:focus,
+.jes-form input[type="month"]:focus,
+.jes-form input[type="time"]:focus,
+.jes-form input[type="week"]:focus,
+.jes-form input[type="number"]:focus,
+.jes-form input[type="email"]:focus,
+.jes-form input[type="url"]:focus,
+.jes-form input[type="search"]:focus,
+.jes-form input[type="tel"]:focus,
+.jes-form input[type="color"]:focus{border-color:var(--jes-field-border-color);outline:0;background:var(--jes-field-bg-color);color:var(--jes-field-color);}
+.jes-form select:disabled,.jes-form textarea:disabled,.jes-form input:not([type]):disabled,.jes-form input[type="text"]:disabled,.jes-form input[type="password"]:disabled,.jes-form input[type="datetime"]:disabled,.jes-form input[type="datetime-local"]:disabled,.jes-form input[type="date"]:disabled,.jes-form input[type="month"]:disabled,.jes-form input[type="time"]:disabled,.jes-form input[type="week"]:disabled,.jes-form input[type="number"]:disabled,.jes-form input[type="email"]:disabled,.jes-form input[type="url"]:disabled,.jes-form input[type="search"]:disabled,.jes-form input[type="tel"]:disabled,.jes-form input[type="color"]:disabled{border-color:#ddd;background-color:#fafafa;color:#999}
+.jes-form :-ms-input-placeholder,
+.jes-form ::-moz-placeholder,
+.jes-form ::-webkit-input-placeholder{color:#999!important}
+
+/* slider */
+.jes-form input[type="range"] {-webkit-appearance: none; appearance: none;width: 70%; height: 5px; background:var(--jes-field-bg-color);outline: none;opacity: 0.7;-webkit-transition: .2s;transition: opacity .2s;}
+.jes-form input[type="range"]:hover {opacity: 1;}
+.jes-form input[type="range"]::-webkit-slider-thumb,
+.jes-form input[type="range"]::-moz-range-thumb {-webkit-appearance: none; appearance: none; width: 15px;height:15px; border-radius:15px;border:1px solid var(--jes-field-color);background:var(--jes-field-bg-color);cursor: pointer;}
+.jes-form input[type="range"] + .jes-value {display:inline-block;width:20%;padding:5px;border:none;border-radius:3px;border-color:var(--jes-field-border-color);background:var(--jes-field-bg-color);color:var(--jes-field-color);}
+.jes-form .jes-slider .middleColumn { display: flex; justify-content: space-between; align-items: center; }
+
+.jes-form .uk-overlay { z-index: 99999;}
