@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 	// create tabs
 	document.querySelectorAll('.jes-switcher > ul:first-child').forEach( element => {
 		element.classList.add('uk-tab');
+		
 	});
 
 	// set up all click events
@@ -49,7 +50,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
 	
 	// add style change listeners
 	document.querySelectorAll('[data-extrastyle]').forEach( element => {
+		setNonEmptyClass(element);
 		element.addEventListener('change', function (event) {
+			setNonEmptyClass(element);
 			var el_form = element.closest('form');
 			var elementID = element.getAttribute('data-es-id');
 			var pageID = el_form.querySelector('[name="PageID"]').value;
@@ -121,8 +124,17 @@ document.addEventListener("DOMContentLoaded", function(e) {
 			} // end if			
 			
 		});
-	});	
+		
+	});	 // end listener
 });
+
+var setNonEmptyClass = function(element){
+	if(element.value!=''){
+		element.classList.add('nonempty');
+	} else {
+		element.classList.remove('nonempty');			
+	}
+}
 
 // helper function to serialize form data
 var serializeForm = function (form) {

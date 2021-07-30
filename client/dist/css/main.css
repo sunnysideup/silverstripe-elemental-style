@@ -10,6 +10,7 @@
 
 --jes-color-primary:#bdbdbd; /* text color */
 --jes-color-secondary:#fff; /* text color */
+--jes-color-accent:#a1e7e7; 
 
 }
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
@@ -27,8 +28,8 @@
 .jes.uk-open > .uk-offcanvas-reveal  {width: var(--jes-offcanvas-width);}
 
 
-.jes .jes-title { font-size: 1.125em; font-weight: bold; padding: 10px; background:#000; position: sticky; top:0; z-index: 999; margin-bottom:10px; color: var(--jes-color-secondary);}
-.jes .jes-fieldgroup .jes-title::after {font-size:10px;vertical-align:top;display:inline-block;margin-left:10px;text-transform:uppercase;color:#3CC;}
+.jes .jes-title { font-size: 1.125em; font-weight: bold; padding: 10px 50px 10px 10px; background:#000; position: sticky; top:0; z-index: 999; margin-bottom:10px; color: var(--jes-color-secondary);}
+.jes .jes-fieldgroup .jes-title::after {font-size:10px;vertical-align:top;display:inline-block;margin-left:10px;text-transform:uppercase;color:var(--jes-color-accent);}
 .jes .jes-fieldgroup.draft .jes-title::after { content:"draft";} 
 .jes .jes-fieldgroup.modified .jes-title::after { content:"modified";}
 .jes .jes-fieldgroup.published .jes-title::after { content:"published";}
@@ -62,12 +63,16 @@
 
 .jes-edit .jes-edit-hover { position:relative;}
 .jes-edit .jes-edit-hover::after { content:"";  }
-.jes-edit .jes-edit-holder { position:absolute; top:0; left:0; bottom:0; right:0; border: 2px dashed transparent; pointer-events:none;  }
+.jes-edit .jes-edit-holder { position:absolute; top:0; left:0; bottom:0; right:0; border: 2px dashed transparent; pointer-events:none; z-index:999;}
 .jes-edit [data-jes-element]:hover .jes-edit-holder { border: 2px dashed #CCC; }
 .jes-edit .jes-edit-hover .jes-edit-holder {border: 2px dashed #666 !important;}
 
 
 .jes [data-jes-tab] { display:none } 
+.jes .uk-tab > * > a { padding: 5px; }
+.jes .uk-tab > :first-child { padding-left: 20px;}
+.jes .uk-tab > * {padding-left: 10px;}
+
 
 .jes-button {display: inline-block;text-align: center;vertical-align: middle;background-color: #efefef;color: #333;padding: .3846rem .7692rem;font-size: 0.875em;font-weight: bold;text-transform:uppercase;font-family: 'Lato', Arial, Helvetica, sans-serif; line-height: 1.5384;border:none; outline:none; cursor:pointer; }
 .jes-button:hover { background-color: #CCC; }
@@ -89,6 +94,7 @@
  ========================================================================== */
 .jes-form input,
 .jes-form select,
+
 .jes-form textarea,
 .jes-form input[type="range"] + .jes-value {box-sizing:border-box;margin:0;border-radius:0;font-size: 13.3333px; }
 .jes-form textarea{resize:vertical}
@@ -161,3 +167,6 @@
 .jes-form .jes-slider .middleColumn { display: flex; justify-content: space-between; align-items: center; }
 
 .jes-form .uk-overlay { z-index: 99999;}
+
+.jes-form select.nonempty { background: var(--jes-color-accent)}
+.jes-form select.nonempty option { background: #fff;}

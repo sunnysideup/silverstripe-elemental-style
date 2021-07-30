@@ -62,7 +62,7 @@ class PageControllerExtension extends Extension {
 					$fields = FieldList::create();
 					$fields->push(HiddenField::create('PageID','PageID',$this->owner->ID));
 					
-					foreach($elementControllers as $elementController) {
+					foreach($elementControllers as $index => $elementController) {
 						
 						$element = $elementController->getElement();
 						$versionedstate = 'published';
@@ -77,7 +77,7 @@ class PageControllerExtension extends Extension {
 						
 						$ec_fields = $element->getFrontEndFormFields();
 	//					Debug::show($elementController->getElement()->getConfigStyles());
-						$el_title = $element->Title?:'Untitled '.$element->singular_name();
+						$el_title = ($index+1).'. '.$element->Title?:'Untitled '.$element->singular_name();
 						$el_tab_id = 'jes'.$element->ID;
 
 						$fields->push(
@@ -85,10 +85,9 @@ class PageControllerExtension extends Extension {
 								LiteralField::create('ElementTitle','<div class="jes-title">'.$el_title.'</div>'),
 							)
 							 ->setAttribute('data-jes-tab',$element->ID)
-							 ->addExtraClass('jes-fieldgroup')
+							 ->addExtraClass('jes-fieldgroup uk-animation-fade')
  							 ->addExtraClass($versionedstate)
 						);
-						
 						$fields->addFieldsToTab( $el_tab_id, $ec_fields);
 					}
 					$actions = FieldList::create(
