@@ -150,7 +150,33 @@ var serializeForm = function (form) {
 var initJesEditButton = function(){
 	
 	document.querySelectorAll('[data-jes-element]').forEach( element => {
-		element.insertAdjacentHTML( 'beforeend', '<div class="jes-edit-holder"><button class="jes-edit-element" uk-icon="cog"></button></div>' );
+		if (element.getElementsByClassName('jes-edit-holder').length == 0) {
+			element.insertAdjacentHTML( 'beforeend', '<div class="jes-edit-holder"><button class="jes-edit-element" uk-icon="cog"></button></div>' );
+			
+			element.addEventListener("mousemove", function( event ) {
+				el_edit_holder = event.target.querySelector('.jes-edit-holder');
+				if (typeof(el_edit_holder) != 'undefined' && el_edit_holder != null){
+					var e = event;
+					var rect = e.target.getBoundingClientRect();
+					var w = rect.width;
+					var h = rect.height;
+					var x = e.clientX - rect.left; //x position within the element.
+					var y = e.clientY - rect.top;  //y position within the element.
+					var classes = 'jes-edit-holder';
+					if(w > 600) {
+						classes += (x > (w/2)) ? ' right' : ' left';
+					}
+					if(h > 200) {
+						classes += (y > (h/2)) ? ' bottom' : ' top';
+					}
+					el_edit_holder.className =  classes; 
+				}
+			}, false);			
+		}
+	});
+	
+	document.querySelectorAll('.jes-edit-holder').forEach( element => {
+
 	});
 	
 	document.querySelectorAll('.jes-edit-element').forEach( element => {

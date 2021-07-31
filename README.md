@@ -8,6 +8,8 @@ Styles are grouped by location. This allows you to insert CSS classes into vario
 
 A good example of where you might want extra styles within your template is when you need to offer the ability to change the number of columns within a grid.
 
+UPDATE! Now includes front end editing for styles. With almost real time results you can see exactly what your elements will look like with various styles applied. You can also use the back end preview area to access this feature.
+
 
 ## Requirements
 
@@ -333,6 +335,23 @@ And in the template:
 
 ```
 <div id="offcanvas" data-uk-offcanvas="{$StyleByLocation('offcanvas.options')}" style="display:none">
+```
+
+
+## Front end editing
+
+In order to view the front end editing features you need to ensure the following things:
+
+- View the page in draft mode, i.e. `/page-url?stage=Stage`
+- Add this to your Page.ss template at the bottom of the page before the `</body>` closing tag
+```
+<% include Jellygnite/ElementalStyle/EditStyleForm %>
+```
+- Add this to your ElementHolder.ss template to the top level HTML tag `data-jes-element="$ID"`, e.g.
+```
+<section class="element $StyleByLocation('element.class')" id="$Anchor" data-jes-element="$ID">
+	$Element
+</section>
 ```
 
 

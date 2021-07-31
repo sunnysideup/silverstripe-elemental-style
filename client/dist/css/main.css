@@ -57,9 +57,6 @@
 .jes-edit.jes-offcanvas-page body { width: calc(100% - var(--jes-offcanvas-width));  }
 
  
-.jes-edit [data-jes-element] { position:relative;}
-[data-jes-element] .jes-edit-element { display: none; position:absolute; top:0; left:0; padding:10px; background: rgba(255,255,255,0.75); color: #000; pointer-events:auto; }
-.jes-edit [data-jes-element]:hover .jes-edit-element { display: block; }
 
 .jes-edit .jes-edit-hover { position:relative;}
 .jes-edit .jes-edit-hover::after { content:"";  }
@@ -67,6 +64,14 @@
 .jes-edit [data-jes-element]:hover .jes-edit-holder { border: 2px dashed #CCC; }
 .jes-edit .jes-edit-hover .jes-edit-holder {border: 2px dashed #666 !important;}
 
+.jes-edit [data-jes-element] { position:relative;}
+.jes-edit [data-jes-element] .jes-edit-element { display: none; position:absolute; top:0; left:0; bottom: auto; right: auto; padding:10px; background: rgba(255,255,255,0.75); color: #000; pointer-events:auto; }
+.jes-edit [data-jes-element]:hover .jes-edit-element { display: block; }
+
+.jes-edit .jes-edit-holder.top .jes-edit-element {top:0; bottom: auto; }
+.jes-edit .jes-edit-holder.right .jes-edit-element {left:auto; right: 0; }
+.jes-edit .jes-edit-holder.bottom .jes-edit-element {top:auto; bottom: 0; }
+.jes-edit .jes-edit-holder.left .jes-edit-element {left:0; right: auto; }
 
 .jes [data-jes-tab] { display:none } 
 .jes .uk-tab > * > a { padding: 5px; }
