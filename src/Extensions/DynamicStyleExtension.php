@@ -83,13 +83,13 @@ class DynamicStyleExtension extends DataExtension
 						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
 						// for now jsut use right title even though Description also sets this
 						if(array_key_exists('Unit',$fieldOptions) && !empty($fieldOptions['Unit'])){
-							$styleFormField->setRightTitle($fieldOptions['Unit']);
+							$styleFormField->setUnit($fieldOptions['Unit']);
 						}
 						if(array_key_exists('Step',$fieldOptions) && !empty($fieldOptions['Step'])){
 							$styleFormField->setStep($fieldOptions['Step']);
 						}
 						if($styleobject->getDescription()){
-							$styleFormField->setDescription($styleobject->getDescription());
+							$styleFormField->setRightTitle($styleobject->getDescription());
 						}
 					} else {
 						
@@ -182,7 +182,7 @@ class DynamicStyleExtension extends DataExtension
 							->addExtraClass('jes-slider');
 						// for now jsut use right title even though Description also sets this
 						if(array_key_exists('Unit',$fieldOptions) && !empty($fieldOptions['Unit'])){
-							$styleFormField->setRightTitle($fieldOptions['Unit']);
+							$styleFormField->setAttribute("data-unit",$fieldOptions['Unit']);
 						}
 						if(array_key_exists('Step',$fieldOptions) && !empty($fieldOptions['Step'])){
 				//			$styleFormField->setStep($fieldOptions['Step']);
