@@ -243,7 +243,7 @@ class DynamicStyleExtension extends DataExtension
 				HiddenField::create($fieldNamePrefix.'ExtraStyle','ExtraStyle', $this->getOwner()->ExtraStyle)
 			);
 			$fields->push(
-				TextField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
+				HiddenField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
 			);
 		}	
 		
