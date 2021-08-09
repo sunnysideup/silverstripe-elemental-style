@@ -175,7 +175,7 @@ class DynamicStyleExtension extends DataExtension
 					$styleFormField = null;
 					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
 //						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
-						$styleFormField = TextField::create($fieldName, $fieldTitle, $fieldValue)
+						$styleFormField = TextField::create($fieldName, $fieldTitle, ($fieldValue?:$fieldOptions['Min']))
 							->setAttribute("type","range")
 							->setAttribute("min",$fieldOptions['Min'])
 							->setAttribute("max",$fieldOptions['Max'])
@@ -243,7 +243,7 @@ class DynamicStyleExtension extends DataExtension
 				HiddenField::create($fieldNamePrefix.'ExtraStyle','ExtraStyle', $this->getOwner()->ExtraStyle)
 			);
 			$fields->push(
-				HiddenField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
+				TextField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
 			);
 		}	
 		
