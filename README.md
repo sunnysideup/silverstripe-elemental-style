@@ -37,6 +37,7 @@ Include the following information in your config:
 - 'Prefix'      : Prefix for the outputted style
 - 'Suffix'      : Suffix for the outputted style
 - 'Options'     : Array of options to create different form fields. Slider is the only alternative field available.
+- 'Default'     : Allows a default value when nothing is selected in the dropdown field. Note this does not have to exist as an option in the allowed Styles, i.e. it can be whatever you want.
 
 
 ### Method 1

@@ -36,6 +36,7 @@ class StyleObject implements \JsonSerializable {
 	protected $options; // use this to create other form fields
 	protected $prefix;
 	protected $suffix;
+	protected $default;
 	
 	
 	private static $arr_default = [
@@ -49,6 +50,7 @@ class StyleObject implements \JsonSerializable {
 		'Options' => [],	
 		'Prefix' => null,
 		'Suffix' => null,	
+		'Default' => null,	// this gets applied when nothing is selected
 	];
 
     public function __construct(String $index, Array $arr_object = [])
@@ -68,6 +70,7 @@ class StyleObject implements \JsonSerializable {
         $this->options = $arr_style['Options'];
         $this->prefix = $arr_style['Prefix'];
         $this->suffix = $arr_style['Suffix'];
+        $this->default = $arr_style['Default'];
     }
 
     public function jsonSerialize()
@@ -116,6 +119,9 @@ class StyleObject implements \JsonSerializable {
 	public function getSuffix(){
 		return $this->suffix;
 	}
+	public function getDefault(){
+		return $this->default;
+	}
 	
 	// return selected value
 	public function getSelected(){
@@ -132,7 +138,7 @@ class StyleObject implements \JsonSerializable {
 		if(!empty($selected) || $selected==='0'){
 			return $this->getPrefix() . $selected . $this->getSuffix();			
 		}
-		return null;
+		return $this->getDefault();
 	}
 
 }

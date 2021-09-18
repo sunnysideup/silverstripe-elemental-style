@@ -45,7 +45,7 @@ class DynamicStyleExtension extends DataExtension
     private static $db = [
         'ExtraStyle' => 'Text'  // saves a json object with all style values
     ];
-
+	
     public function updateCMSFields(FieldList $fields) {
 		
 		$default_tab_name = $this->getOwner()->config()->get('default_tab_name');
@@ -109,6 +109,7 @@ class DynamicStyleExtension extends DataExtension
 						$styleFormField->setAttribute('data-es-location',$styleobject->getLocation());
 						$styleFormField->setAttribute('data-es-prefix',$styleobject->getPrefix());
 						$styleFormField->setAttribute('data-es-suffix',$styleobject->getSuffix());
+						$styleFormField->setAttribute('data-es-default',$styleobject->getDefault());
 						
 						$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
 						if(!empty($tabName)) {
@@ -203,13 +204,13 @@ class DynamicStyleExtension extends DataExtension
 
 					} // end if options
 					if(!empty($styleFormField)){
-						
 						$styleFormField->setAttribute('data-es-id',$this->owner->ID);
 						$styleFormField->setAttribute('data-extrastyle','true');
 						$styleFormField->setAttribute('data-es-index',$styleobject->getIndex());
 						$styleFormField->setAttribute('data-es-location',$styleobject->getLocation());
 						$styleFormField->setAttribute('data-es-prefix',$styleobject->getPrefix());
 						$styleFormField->setAttribute('data-es-suffix',$styleobject->getSuffix());
+						$styleFormField->setAttribute('data-es-default',$styleobject->getDefault());
 						$styleFormField->setAttribute('name',null); // prevent field from being submitted.
 
 					

@@ -2,16 +2,33 @@ document.addEventListener("DOMContentLoaded", function(e) {
 	var util = UIkit.util;
 	var el_html = document.querySelector('html');
 	el_html.classList.add("jes-edit");
-	
-	var el_jes = document.querySelector('#jes_form_holder');	
-	el_jes.addEventListener('beforeshow', function (e) {
-		el_html.classList.add('jes-offcanvas-page');
-		UIkit.switcher('.jes-switcher > ul', {'connect':'~div'});
+
+	document.addEventListener('beforeshow', function (e) {
+		var target = event.target || event.srcElement;
+		var id = target.id
+		if(id=='jes_form_holder'){
+			el_html.classList.add('jes-offcanvas-page');
+			UIkit.switcher('.jes-switcher > ul', {'connect':'~div'});
+		}
 	});
-	el_jes.addEventListener('beforehide', function (e) {
-		el_html.classList.remove('jes-offcanvas-page');
+	document.addEventListener('beforehide', function (e) {
+		var target = event.target || event.srcElement;
+		var id = target.id
+		if(id=='jes_form_holder'){
+			el_html.classList.remove('jes-offcanvas-page');			
+		}
+	});
+	document.addEventListener('hidden', function (e) {
+		var target = event.target || event.srcElement;
+		var id = target.id
+		if(id=='jes_form_holder'){
+			window.dispatchEvent(new Event('resize'));		
+		}
 	});
 
+	
+			
+			
 	// remove Enter keypress on form
 	window.addEventListener('keydown',function(e){
 		if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}
@@ -36,8 +53,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
 	// slider
 	document.querySelectorAll('input.jes-slider').forEach( element => {
 		var el_slider_value = document.createElement('span'); //<span class="jes-value"></span>
+		var el_slider_unit = document.createElement('span'); //<span class="jes-value"></span>
 		el_slider_value.classList.add('jes-value');
+		el_slider_unit.classList.add('jes-slide-unit-label');
+		el_slider_unit.innerHTML = element.getAttribute('data-unit');
 		element.after(el_slider_value);
+		el_slider_value.after(el_slider_unit);
 		
 		element.addEventListener('input', function (e) {
 			this.nextElementSibling.innerHTML = this.value;
@@ -69,19 +90,24 @@ document.addEventListener("DOMContentLoaded", function(e) {
 					let locationData = element.getAttribute('data-es-location');
 					let prefixData = element.getAttribute('data-es-prefix');
 					let suffixData = element.getAttribute('data-es-suffix');
+					let defaultData = element.getAttribute('data-es-default');
 					if(selectedValue.length){
 						var newObject = new Object();
 						newObject['Location'] = locationData;
 						newObject['Styles'] = {"Selected":selectedValue};
-						if(prefixData !== 'undefined' ){
+						if(typeof prefixData !== 'undefined' ){
 							newObject['Prefix'] = prefixData;
 						}
-						if(suffixData !== 'undefined' ){
+						if(typeof suffixData !== 'undefined' ){
 							newObject['Suffix'] = suffixData;
 						}
 						// update array value or create new
 						stylesObject[[indexData]] = newObject;
-					}
+					} else if(typeof defaultData !== 'undefined' ){
+						var newObject = new Object();
+						newObject['Default'] = defaultData;
+						stylesObject[[indexData]] = newObject;
+					} 
 				});
 				let newValue = JSON.stringify(stylesObject);
 				el_extraStyleField.value = newValue;

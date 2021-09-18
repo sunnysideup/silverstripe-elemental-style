@@ -19,8 +19,8 @@
 
 .jes form { margin:0;padding:0; display: flex; flex-direction: column; justify-content: space-between; height: 100vh; }
 .jes fieldset { border:none; margin: 0; padding: 0; overflow-y: auto; overflow-x: hidden;}
-.jes .uk-offcanvas-close { top:4px; right: 20px; z-index:999; background: rgba(255, 255, 255, 0.25); }
-.jes .uk-offcanvas-close:hover { background: rgba(255, 255, 255, 0.5); }
+.jes .uk-offcanvas-close { width:30px; height:30px; top:6px; right: 20px; z-index:999; background: rgba(255, 255, 255, 0.25); color: #c7c7c7; }
+.jes .uk-offcanvas-close:hover { background: rgba(255, 255, 255, 0.5); color: #fff;}
 
 .no-js .jes  { display: none !important; }
 .jes-offcanvas-bar { width: var(--jes-offcanvas-width); padding: 0; overflow: hidden; background: var(--jes-offcanvas-bg-color); color: var(--jes-color-primary); }
