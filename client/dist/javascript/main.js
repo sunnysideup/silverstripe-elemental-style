@@ -177,7 +177,7 @@ var initJesEditButton = function(){
 	
 	document.querySelectorAll('[data-jes-element]').forEach( element => {
 		if (element.getElementsByClassName('jes-edit-holder').length == 0) {
-			element.insertAdjacentHTML( 'beforeend', '<div class="jes-edit-holder"><button class="jes-edit-element" uk-icon="cog"></button></div>' );
+			element.insertAdjacentHTML( 'beforeend', '<div class="jes-edit-holder"><button class="jes-edit-element" uk-icon="jes-cog"></button></div>' );
 			
 			element.addEventListener("mousemove", function( event ) {
 				el_edit_holder = event.target.querySelector('.jes-edit-holder');

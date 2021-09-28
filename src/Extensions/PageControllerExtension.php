@@ -52,10 +52,9 @@ class PageControllerExtension extends Extension {
 				if($elementControllers->Count()){
 					
 					Requirements::themedCSS('client/uikit-'.$uikit_version.'/css/uikit.css');
-					Requirements::themedJavascript('client/uikit-'.$uikit_version.'/js/uikit.min.js');
-					Requirements::themedJavascript('client/uikit-'.$uikit_version.'/js/uikit-icons.min.js');
-					
-      				Requirements::javascript('jellygnite/silverstripe-elemental-style:client/dist/javascript/main.js');
+					Requirements::themedJavascript('client/uikit-'.$uikit_version.'/js/uikit.min.js');					
+      				Requirements::javascript('jellygnite/silverstripe-elemental-style:client/dist/javascript/uikit-icons.custom.min.js');
+					Requirements::javascript('jellygnite/silverstripe-elemental-style:client/dist/javascript/main.js');
 					Requirements::css('jellygnite/silverstripe-elemental-style:client/dist/css/main.css');
 					
 					

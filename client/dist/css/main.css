@@ -74,7 +74,7 @@
 .jes-edit .jes-edit-holder.left .jes-edit-element {left:0; right: auto; }
 
 .jes [data-jes-tab] { display:none } 
-.jes .uk-tab > * > a { padding: 5px; }
+.jes .uk-tab > * > a { padding: 5px; text-decoration: none }
 .jes .uk-tab > :first-child { padding-left: 20px;}
 .jes .uk-tab > * {padding-left: 10px;}
 
