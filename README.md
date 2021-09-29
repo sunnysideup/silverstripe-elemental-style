@@ -36,7 +36,7 @@ Include the following information in your config:
 - 'Styles'      : Array of styles to appear in the style field ['title' => 'css classes']
 - 'Prefix'      : Prefix for the outputted style
 - 'Suffix'      : Suffix for the outputted style
-- 'Options'     : Array of options to create different form fields. Slider is the only alternative field available.
+- 'Options'     : Array of options to create different form fields. Slider and Multiselect (listbox) are the available field types.
 - 'Default'     : Allows a default value when nothing is selected in the dropdown field. Note this does not have to exist as an option in the allowed Styles, i.e. it can be whatever you want.
 
 
@@ -167,6 +167,19 @@ Options e.g.
 				'Max' => '50',
 				'Step' => '5',
 				'Unit' => '%',
+			],
+		],
+		'ImageSettings' => [
+			'Title' => 'Image Settings',
+			'Description' => 'Adjust the look of the image',
+			'Location' => 'image.css',
+			'Styles' => [
+				'Round border' => 'b-circle',
+				'Scale on hover' => 'hover-scale',
+				'No background colour' => 'bg-none',
+			]
+			'Options' => [
+				'Type' => 'multiselect',
 			],
 		],
 ```

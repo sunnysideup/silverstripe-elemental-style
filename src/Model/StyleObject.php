@@ -49,7 +49,7 @@ class StyleObject implements \JsonSerializable {
 		'Sort' => 100,
 		'Options' => [],	
 		'Prefix' => null,
-		'Suffix' => null,	
+		'Suffix' => null,
 		'Default' => null,	// this gets applied when nothing is selected
 	];
 
@@ -119,6 +119,12 @@ class StyleObject implements \JsonSerializable {
 	public function getSuffix(){
 		return $this->suffix;
 	}
+	public function getType(){
+		if($options = $this->getOptions()){
+			return $options['Type'];
+		}
+		return null;
+	}
 	public function getDefault(){
 		return $this->default;
 	}
@@ -135,7 +141,13 @@ class StyleObject implements \JsonSerializable {
 	// return selected value nicely formatted
 	public function getFormattedSelected(){
 		$selected = $this->getSelected();
-		if(!empty($selected) || $selected==='0'){
+		if(is_array($selected)){
+			$output = '';
+			foreach($selected AS $item){
+				$output .= $this->getPrefix() . $item . $this->getSuffix() . ' ';
+			}
+			return trim($output);
+		} elseif(!empty($selected) || $selected==='0'){
 			return $this->getPrefix() . $selected . $this->getSuffix();			
 		}
 		return $this->getDefault();

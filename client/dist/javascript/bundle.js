@@ -13,7 +13,7 @@
 					var arrStyleObjects = [];
 					var stylesObject = new Object();
 					$(this).closest('form').find('[data-extrastyle]').each(function(index, element) {
-						let selectedValue = $(element).val();
+						let selectedValue = $(element).val() || [];
 						let indexData = $(element).data('es-index');
 						let locationData = $(element).data('es-location');
 						let prefixData = $(element).data('es-prefix');

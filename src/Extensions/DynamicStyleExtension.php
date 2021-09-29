@@ -10,6 +10,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
@@ -75,11 +76,14 @@ class DynamicStyleExtension extends DataExtension
 				$fieldStyles = $styleobject->getStyles();
 				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
+				$fieldType = $styleobject->getType();
 				if(!empty($fieldStyles) || !empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
 					$styleFormField = null;
-					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
+					
+					if(!empty($fieldOptions) && $fieldType=='slider'){
+						/* SLIDER FIELD */
 						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
 						// for now jsut use right title even though Description also sets this
 						if(array_key_exists('Unit',$fieldOptions) && !empty($fieldOptions['Unit'])){
@@ -88,14 +92,16 @@ class DynamicStyleExtension extends DataExtension
 						if(array_key_exists('Step',$fieldOptions) && !empty($fieldOptions['Step'])){
 							$styleFormField->setStep($fieldOptions['Step']);
 						}
-						if($styleobject->getDescription()){
-							$styleFormField->setRightTitle($styleobject->getDescription());
+					} elseif($fieldType=='multiselect'){
+						/* MULTISELECT FIELD */
+						$styleFormField = ListboxField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
+						if($disable_chosen){
+							$styleFormField->addExtraClass('no-chosen');
 						}
-					} else {
 						
-					
+					} else {
+						/* STANDARD SELECT FIELD */
 						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
-						$styleFormField->setRightTitle($styleobject->getDescription());
 						$styleFormField->setEmptyString($this->getEmptyString($fieldStyles));
 						if($disable_chosen){
 							$styleFormField->addExtraClass('no-chosen');
@@ -103,6 +109,10 @@ class DynamicStyleExtension extends DataExtension
 
 					} // end if options
 					if(!empty($styleFormField)){
+						
+						if($styleobject->getDescription()){
+							$styleFormField->setRightTitle($styleobject->getDescription());
+						}
 						
 						$styleFormField->setAttribute('data-extrastyle','true');
 						$styleFormField->setAttribute('data-es-index',$styleobject->getIndex());
@@ -170,11 +180,12 @@ class DynamicStyleExtension extends DataExtension
 				$fieldStyles = $styleobject->getStyles();
 				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
+				$fieldType = $styleobject->getType();
 				if(!empty($fieldStyles) || !empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
 					$styleFormField = null;
-					if(!empty($fieldOptions) && $fieldOptions['Type']='slider'){
+					if(!empty($fieldOptions) && $fieldType=='slider'){
 //						$styleFormField = SliderField::create($fieldName, $fieldTitle,$fieldOptions['Min'], $fieldOptions['Max'], $fieldValue);
 						$styleFormField = TextField::create($fieldName, $fieldTitle, ($fieldValue?:$fieldOptions['Min']))
 							->setAttribute("type","range")
@@ -192,6 +203,13 @@ class DynamicStyleExtension extends DataExtension
 						if($styleobject->getDescription()){
 							$styleFormField->setDescription($styleobject->getDescription());
 						}
+					} elseif($fieldType=='multiselect'){
+						$styleFormField = ListboxField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
+						$styleFormField->setRightTitle($styleobject->getDescription());
+						if($disable_chosen){
+							$styleFormField->addExtraClass('no-chosen');
+						}
+						
 					} else {
 						
 					
