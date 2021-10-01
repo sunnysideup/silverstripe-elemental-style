@@ -35,6 +35,7 @@
 							stylesObject[[indexData]] = newObject;
 						} else if(typeof defaultData !== 'undefined' ){
 							var newObject = new Object();
+							newObject['Location'] = locationData;
 							newObject['Default'] = defaultData;
 							stylesObject[[indexData]] = newObject;
 						} 
