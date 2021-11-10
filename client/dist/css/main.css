@@ -19,7 +19,7 @@
 
 .jes form { margin:0;padding:0; display: flex; flex-direction: column; justify-content: space-between; height: 100vh; }
 .jes fieldset { border:none; margin: 0; padding: 0; overflow-y: auto; overflow-x: hidden;}
-.jes .uk-offcanvas-close { width:30px; height:30px; top:6px; right: 20px; z-index:999; background: rgba(255, 255, 255, 0.25); color: #c7c7c7; }
+.jes .uk-offcanvas-close { width:30px; height:30px; top:6px; right: 20px; z-index:2147483647; background: rgba(255, 255, 255, 0.25); color: #c7c7c7; }
 .jes .uk-offcanvas-close:hover { background: rgba(255, 255, 255, 0.5); color: #fff;}
 
 .no-js .jes  { display: none !important; }
@@ -45,9 +45,9 @@
 .jes .field input { width: 100% }
 
 
-.jes .field label.left { font-weight: bold; }
+.jes .field label.left { font-weight: bold;font-size:1em;}
 .jes .field label.right,
-.jes .field span.description { font-size: 13px; }
+.jes .field span.description { font-size: 0.866667em; }
 
 .jes .tabset { padding: 0 10px }
 .jes .uk-tab li {   }
@@ -74,13 +74,13 @@
 .jes-edit .jes-edit-holder.left .jes-edit-element {left:0; right: auto; }
 
 .jes [data-jes-tab] { display:none } 
-.jes .uk-tab > * > a { padding: 5px; text-decoration: none }
+.jes .uk-tab > * > a { padding: 5px; text-decoration: none; font-size:0.933333em; }
 .jes .uk-tab > :first-child { padding-left: 20px;}
 .jes .uk-tab > * {padding-left: 10px;}
 
 
-.jes-button {display: inline-block;text-align: center;vertical-align: middle;background-color: #efefef;color: #333;padding: .3846rem .7692rem;font-size: 0.875em;font-weight: bold;text-transform:uppercase;font-family: 'Lato', Arial, Helvetica, sans-serif; line-height: 1.5384;border:none; outline:none; cursor:pointer; }
-.jes-button:hover { background-color: #CCC; }
+.jes-button {display: inline-block !important;text-align: center!important;vertical-align: middle!important;background-color: #efefef!important;color: #333!important;padding: .3846rem .7692rem!important;font-size: 0.875em!important;font-weight: bold!important;text-transform:uppercase!important;font-family: 'Lato', Arial, Helvetica, sans-serif!important; line-height: 1.5384!important;border:none!important; outline:none!important; cursor:pointer!important; }
+.jes-button:hover { background-color: #CCC!important; }
 
 .jes .btn-toolbar { padding: 20px 10px; width: 100%; }
 .jes .btn-toolbar .jes-button { width: 30%; }
