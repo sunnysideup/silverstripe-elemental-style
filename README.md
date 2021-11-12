@@ -9,8 +9,9 @@ Styles are grouped by location. This allows you to insert CSS classes into vario
 A good example of where you might want extra styles within your template is when you need to offer the ability to change the number of columns within a grid.
 
 **UPDATES**
-v4.4.0 - Extra fields are now available. Multiselect, Optionset and ImageOptionset
-v4.3.0 - Includes front end editing for styles. With almost real time results you can see exactly what your elements will look like with various styles applied. You can also use the back end preview area to access this feature.
+
+- v4.4.0 : Extra fields are now available. Multiselect, Optionset and ImageOptionset
+- v4.3.0 : Includes front end editing for styles. With almost real time results you can see exactly what your elements will look like with various styles applied. You can also use the back end preview area to access this feature.
  
 
 ## Requirements
