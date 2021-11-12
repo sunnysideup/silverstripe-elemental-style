@@ -4,6 +4,29 @@
 				$('[data-extrastyle]').first().change();
 			}
 		}); // end data-extrastyle
+		
+		
+	
+		$('[data-es-type$="optionset"] input:checked').entwine({
+			onmatch: function() {
+				$(this).attr('data-checked',true);
+			},
+			onclick: function(e) {
+				let is_checked = $(this).attr('data-checked');
+				let name = $(this).prop('name');
+				$('input[name="'+name+'"]').attr('data-checked',false);
+				if(is_checked == 'true'){
+					$(this).attr('data-checked',false);
+					$(this).attr('checked', false);		
+					$(this).change();
+				} else {
+					$(this).attr('data-checked',true);
+					$(this).attr('checked', true);			
+				}
+
+			}
+		}); // end data-es-type
+		
 		$('[data-extrastyle]').entwine({
 			onchange: function() {
 				var $extraStyleField = $(this).getextrastylefield();
@@ -19,6 +42,10 @@
 						let prefixData = $(element).data('es-prefix');
 						let suffixData = $(element).data('es-suffix');
 						let defaultData = $(element).data('es-default');
+						let fieldType = $(element).data('es-type');
+						if(fieldType == 'optionset' || fieldType == 'imageoptionset'){
+							selectedValue= $(element).find('input:checked').first().val() || []; 
+						}
 						if(selectedValue.length){
 							
 							var newObject = new Object();

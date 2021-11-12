@@ -4,6 +4,7 @@ namespace Jellygnite\ElementalStyle\Extensions;
 
 use Jellygnite\ElementalStyle\Model\StyleObject;
 use Jellygnite\SliderField\SliderField;
+use Jellygnite\ElementalStyle\Forms\ImageOptionsetField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FormField;
@@ -11,6 +12,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
@@ -98,7 +100,28 @@ class DynamicStyleExtension extends DataExtension
 						if($disable_chosen){
 							$styleFormField->addExtraClass('no-chosen');
 						}
-						
+					} elseif($fieldType=='optionset'){
+						/* OPTIONSET FIELD */
+						$styleFormField = OptionsetField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
+					}elseif($fieldType=='imageoptionset'){
+						/* IMAGEOPTIONSET FIELD */
+						$objectOptions = [];
+						$fieldImages = $styleobject->getImages();
+						$styleFormField = ImageOptionsetField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue, $fieldImages);
+						if($fieldOptions['ShowLabels'] == false){
+							$styleFormField->addExtraClass('hide-labels');
+						}
+						switch ($fieldOptions['ImageSize']){
+							case 'medium':
+								$styleFormField->addExtraClass('imagesize-medium');
+								break;
+							case 'large':
+								$styleFormField->addExtraClass('imagesize-large');
+								break;
+							case 'small':
+								$styleFormField->addExtraClass('imagesize-small');
+								break;
+						}
 					} else {
 						/* STANDARD SELECT FIELD */
 						$styleFormField = DropdownField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue); 
@@ -113,13 +136,13 @@ class DynamicStyleExtension extends DataExtension
 						if($styleobject->getDescription()){
 							$styleFormField->setRightTitle($styleobject->getDescription());
 						}
-						
 						$styleFormField->setAttribute('data-extrastyle','true');
 						$styleFormField->setAttribute('data-es-index',$styleobject->getIndex());
 						$styleFormField->setAttribute('data-es-location',$styleobject->getLocation());
 						$styleFormField->setAttribute('data-es-prefix',$styleobject->getPrefix());
 						$styleFormField->setAttribute('data-es-suffix',$styleobject->getSuffix());
 						$styleFormField->setAttribute('data-es-default',$styleobject->getDefault());
+						$styleFormField->setAttribute('data-es-type',$styleobject->getType());
 						
 						$tabName = (!empty($styleobject->getTab())) ?  $styleobject->getTab() : $default_tab_name;
 						if(!empty($tabName)) {

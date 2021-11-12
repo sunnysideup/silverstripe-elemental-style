@@ -86,6 +86,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
 				var stylesObject = new Object();
 				el_form.querySelectorAll('[data-extrastyle][data-es-id="'+elementID+'"]').forEach( element => {
 					let selectedValue = element.value;
+					var isMulti = element.multiple; // true/false
+					if(isMulti==true){
+						selectedValue = Array.from(element.selectedOptions).map(el => el.value);	
+					}
 					let indexData = element.getAttribute('data-es-index');
 					let locationData = element.getAttribute('data-es-location');
 					let prefixData = element.getAttribute('data-es-prefix');

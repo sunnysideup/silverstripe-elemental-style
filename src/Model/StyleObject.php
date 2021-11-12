@@ -104,8 +104,30 @@ class StyleObject implements \JsonSerializable {
 	public function getAfter(){
 		return $this->after;
 	}
+	// can pass in array or single value
 	public function getStyles(){
-		return $this->styles;
+		$arrReturn = [];
+		$styles = $this->styles;
+		foreach($styles as $key => $value){
+			if(is_array($value) && array_key_exists('Value',$value) ){
+				$arrReturn[$key] = $value['Value'];
+			} else {
+				$arrReturn[$key] = $value;
+			}
+		}
+		return $arrReturn;
+	}
+	public function getImages(){
+		$arrReturn = [];
+		$styles = $this->styles;
+		foreach($styles as $key => $value){
+			if(is_array($value) && array_key_exists('Image',$value) ){
+				$arrReturn[$key] = $value['Image'];
+			} else {
+				$arrReturn[$key] = null;
+			}
+		}
+		return $arrReturn;
 	}
 	public function getOptions(){
 		return $this->options;

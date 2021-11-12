@@ -9,6 +9,8 @@ DNADesign\Elemental\Models\BaseElement:
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - jellygnite/silverstripe-elemental-style:client/dist/javascript/bundle.js
+  extra_requirements_css:
+    - jellygnite/silverstripe-elemental-style:client/dist/css/bundle.css
 PageController:
   extensions:
     - Jellygnite\ElementalStyle\Extensions\PageControllerExtension
