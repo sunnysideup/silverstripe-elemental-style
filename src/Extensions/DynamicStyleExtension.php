@@ -108,7 +108,7 @@ class DynamicStyleExtension extends DataExtension
 						$objectOptions = [];
 						$fieldImages = $styleobject->getImages();
 						$styleFormField = ImageOptionsetField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue, $fieldImages);
-						if($fieldOptions['ShowLabels'] == false){
+						if($fieldOptions['ShowLabels'] === false){
 							$styleFormField->addExtraClass('hide-labels');
 						}
 						switch ($fieldOptions['ImageSize']){
