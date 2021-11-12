@@ -53,6 +53,16 @@ class StyleObject implements \JsonSerializable {
 		'Default' => null,	// this gets applied when nothing is selected
 	];
 
+	private static $arr_default_options = [
+		'Type' => null,
+		'ShowLabels' => null,
+		'Min' => null,
+		'Max' => null,
+		'Unit' => null,
+		'Step' => null,
+		'ImageSize' => null,
+	];
+
     public function __construct(String $index, Array $arr_object = [])
     {
 		
@@ -67,7 +77,7 @@ class StyleObject implements \JsonSerializable {
         $this->after = $arr_style['After'];
         $this->styles = $arr_style['Styles'];
         $this->sort = $arr_style['Sort'];
-        $this->options = $arr_style['Options'];
+        $this->options = array_merge(self::$arr_default_options, $arr_style['Options']);
         $this->prefix = $arr_style['Prefix'];
         $this->suffix = $arr_style['Suffix'];
         $this->default = $arr_style['Default'];

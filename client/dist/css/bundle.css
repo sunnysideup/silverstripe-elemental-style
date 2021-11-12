@@ -1,6 +1,6 @@
 [data-es-type$="optionset"] { display:flex; gap:20px; }
 [data-es-type$="optionset"] label { cursor:pointer; margin-bottom:0;}
-[data-es-type$="optionset"] > .form-check  { display:flex; gap:5px; padding-left:0; align-items:center}
+[data-es-type$="optionset"] > .form-check  { display:flex; gap:0 5px; padding-left:0; align-items:center}
 [data-es-type$="optionset"] .form-check-input { position:static; margin:0; }
 [data-es-type="imageoptionset"] [data-es-image] { height:64px;width:64px; padding:2px; border: 2px solid transparent; }
 [data-es-type="imageoptionset"] [data-es-image] > div {height:100%;width:100%;border:none;outline:none; background-repeat:no-repeat; background-size:contain; }
@@ -9,7 +9,8 @@
 [data-es-type="imageoptionset"].imagesize-small [data-es-image] {height:32px;width:32px; }
 [data-es-type="imageoptionset"].imagesize-medium [data-es-image] {height:64px;width:64px; }
 [data-es-type="imageoptionset"].imagesize-large [data-es-image] {height:96px;width:96px; }
-[data-es-type="imageoptionset"].imagesize-large > .form-check.hasobject { flex-direction: column; }
+[data-es-type="imageoptionset"].imagesize-medium > .form-check.hasobject,
+[data-es-type="imageoptionset"].imagesize-large > .form-check.hasobject{ flex-direction: column; }
 
 [data-es-type="imageoptionset"] .hasobject input,
 .hide-labels .hasobject .form-check-label { overflow: hidden;width: 0;height: 0;opacity: 0; position:absolute; }

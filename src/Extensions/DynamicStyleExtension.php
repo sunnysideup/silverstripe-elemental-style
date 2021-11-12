@@ -112,14 +112,14 @@ class DynamicStyleExtension extends DataExtension
 							$styleFormField->addExtraClass('hide-labels');
 						}
 						switch ($fieldOptions['ImageSize']){
+							case 'small':
+								$styleFormField->addExtraClass('imagesize-small');
+								break;
 							case 'medium':
 								$styleFormField->addExtraClass('imagesize-medium');
 								break;
 							case 'large':
 								$styleFormField->addExtraClass('imagesize-large');
-								break;
-							case 'small':
-								$styleFormField->addExtraClass('imagesize-small');
 								break;
 						}
 					} else {
