@@ -42,7 +42,7 @@
 .jes .field span.description {  flex-basis: 100%;margin-bottom: 1%; }
 
 .jes .field select,
-.jes .field input { width: 100% }
+.jes .field input { width: 100%; font-family: inherit; }
 
 
 .jes .field label.left { font-weight: bold;font-size:1em;}
