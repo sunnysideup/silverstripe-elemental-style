@@ -5,8 +5,10 @@ namespace Jellygnite\ElementalStyle\Extensions;
 use Jellygnite\ElementalStyle\Model\StyleObject;
 use Jellygnite\SliderField\SliderField;
 use Jellygnite\ElementalStyle\Forms\ImageOptionsetField;
+use Jellygnite\ElementalStyle\Forms\CheckboxsetButtonsField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
@@ -100,9 +102,14 @@ class DynamicStyleExtension extends DataExtension
 						if($disable_chosen){
 							$styleFormField->addExtraClass('no-chosen');
 						}
+					} elseif($fieldType=='checkboxset'){
+						/* CHECKBOXSETFIELD FIELD */
+						$styleFormField = CheckboxSetField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
+						$styleFormField->setTemplate('Jellygnite\\ElementalStyle\\Forms\\CustomCheckboxsetField');
 					} elseif($fieldType=='optionset'){
 						/* OPTIONSET FIELD */
 						$styleFormField = OptionsetField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
+						$styleFormField->setTemplate('Jellygnite\\ElementalStyle\\Forms\\CustomOptionsetField');
 					}elseif($fieldType=='imageoptionset'){
 						/* IMAGEOPTIONSET FIELD */
 						$objectOptions = [];

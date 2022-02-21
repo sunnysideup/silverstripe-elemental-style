@@ -185,10 +185,10 @@ var initJesEditButton = function(){
 			element.insertAdjacentHTML( 'beforeend', '<div class="jes-edit-holder"><button class="jes-edit-element" uk-icon="jes-cog"></button></div>' );
 			
 			element.addEventListener("mousemove", function( event ) {
-				el_edit_holder = event.target.querySelector('.jes-edit-holder');
+				el_edit_holder = element.querySelector('.jes-edit-holder');
 				if (typeof(el_edit_holder) != 'undefined' && el_edit_holder != null){
 					var e = event;
-					var rect = e.target.getBoundingClientRect();
+					var rect = element.getBoundingClientRect();
 					var w = rect.width;
 					var h = rect.height;
 					var x = e.clientX - rect.left; //x position within the element.

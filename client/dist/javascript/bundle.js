@@ -44,7 +44,13 @@
 						let defaultData = $(element).data('es-default');
 						let fieldType = $(element).data('es-type');
 						if(fieldType == 'optionset' || fieldType == 'imageoptionset'){
-							selectedValue= $(element).find('input:checked').first().val() || []; 
+							selectedValue = $(element).find('input:checked').first().val() || []; 
+						}
+						if(fieldType == 'checkboxset'){
+							selectedValue = [];
+							$(element).find('input:checked').each(function(){
+								selectedValue.push($(this).val());
+							});
 						}
 						if(selectedValue.length){
 							
