@@ -37,6 +37,7 @@ class StyleObject implements \JsonSerializable {
 	protected $prefix;
 	protected $suffix;
 	protected $default;
+	protected $group;
 	
 	
 	private static $arr_default = [
@@ -51,6 +52,7 @@ class StyleObject implements \JsonSerializable {
 		'Prefix' => null,
 		'Suffix' => null,
 		'Default' => null,	// this gets applied when nothing is selected
+		'Group' => null,
 	];
 
 	private static $arr_default_options = [
@@ -60,7 +62,7 @@ class StyleObject implements \JsonSerializable {
 		'Max' => null,
 		'Unit' => null,
 		'Step' => null,
-		'ImageSize' => null,
+		'ImageSize' => null
 	];
 
     public function __construct(String $index, Array $arr_object = [])
@@ -81,6 +83,7 @@ class StyleObject implements \JsonSerializable {
         $this->prefix = $arr_style['Prefix'];
         $this->suffix = $arr_style['Suffix'];
         $this->default = $arr_style['Default'];
+        $this->group = $arr_style['Group'];
     }
 
     public function jsonSerialize()
@@ -159,6 +162,9 @@ class StyleObject implements \JsonSerializable {
 	}
 	public function getDefault(){
 		return $this->default;
+	}
+	public function getGroup(){
+		return $this->group;
 	}
 	
 	// return selected value

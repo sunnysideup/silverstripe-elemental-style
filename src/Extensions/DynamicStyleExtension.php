@@ -10,8 +10,11 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\GroupedDropdownField;
+
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\OptionsetField;
@@ -73,6 +76,7 @@ class DynamicStyleExtension extends DataExtension
 		}
 				
 		if (is_array($arr_config_styleobjects) && count($arr_config_styleobjects) > 0) {
+			$arrFieldGoups = [];
 			foreach($arr_config_styleobjects as $styleobject){
 				$index = $styleobject->getIndex();
 				$fieldName = self::getStyleFieldName($index);
@@ -81,6 +85,7 @@ class DynamicStyleExtension extends DataExtension
 				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
 				$fieldType = $styleobject->getType();
+				$fieldGroup = $styleobject->getGroup();
 				if(!empty($fieldStyles) || !empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
@@ -157,13 +162,34 @@ class DynamicStyleExtension extends DataExtension
 								$fields->insertAfter(Tab::create($tabName), 'Settings');
 							}			
 						}
-						if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
-							$fields->insertAfter($styleFormField,$fieldAfter);
+						
+						if($fieldGroup){							
+							if (!array_key_exists($fieldGroup,$arrFieldGoups)){
+								$arrFieldGoups[$fieldGroup] = FieldGroup::create($fieldGroup )
+									->setTitle(ucwords(FormField::name_to_label($fieldGroup)))
+									->addExtraClass('es-fieldgroup');
+								if($styleobject->getDescription()){
+									$arrFieldGoups[$fieldGroup]->setRightTitle($styleobject->getDescription());
+								}
+								if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
+									$fields->insertAfter($arrFieldGoups[$fieldGroup],$fieldAfter);
+								} else {
+									$fields->addFieldToTab(
+										'Root.'. $tabName,
+										$arrFieldGoups[$fieldGroup] 
+									);
+								}
+							}
+							$arrFieldGoups[$fieldGroup]->push($styleFormField);
 						} else {
-							$fields->addFieldToTab(
-								'Root.'. $tabName,
-								$styleFormField 
-							);
+							if($fieldAfter && $fields->dataFieldByName($fieldAfter)){
+								$fields->insertAfter($styleFormField,$fieldAfter);
+							} else {
+								$fields->addFieldToTab(
+									'Root.'. $tabName,
+									$styleFormField 
+								);
+							}
 						}
 					}
 				}
@@ -172,15 +198,14 @@ class DynamicStyleExtension extends DataExtension
 				'Root.' . $default_tab_name,
 				[
 					HiddenField::create('ExtraStyle','ExtraStyle'),
-					TextField::create('ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
+					TextField::create('ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true),
 				]
 			);
 		}
 		
 
     }
-
-
+			
 
 	public function getFrontEndFormFields() {
 				
@@ -211,6 +236,7 @@ class DynamicStyleExtension extends DataExtension
 				$fieldOptions = $styleobject->getOptions();
 				$fieldAfter = $styleobject->getAfter();
 				$fieldType = $styleobject->getType();
+				$fieldGroup = $styleobject->getGroup();
 				if(!empty($fieldStyles) || !empty($fieldOptions)){
 					// fix this using objects?
 					$fieldValue = (array_key_exists($index, $arr_extrastyle_styleobjects)) ? $arr_extrastyle_styleobjects[$index]->getSelected() : null;
@@ -233,7 +259,7 @@ class DynamicStyleExtension extends DataExtension
 						if($styleobject->getDescription()){
 							$styleFormField->setDescription($styleobject->getDescription());
 						}
-					} elseif($fieldType=='multiselect'){
+					} elseif( ($fieldType=='multiselect') || ($fieldType=='checkboxset') ){
 						$styleFormField = ListboxField::create($fieldName, $fieldTitle, array_flip($fieldStyles), $fieldValue);
 						$styleFormField->setRightTitle($styleobject->getDescription());
 						if($disable_chosen){
@@ -294,6 +320,8 @@ class DynamicStyleExtension extends DataExtension
 			$fields->push(
 				HiddenField::create($fieldNamePrefix.'ExtraStyleOutput','Extra Style', $this->getOwner()->ExtraStyle)->setReadonly(true)
 			);
+			
+			
 		}	
 		
 		return $fields;	
@@ -356,6 +384,35 @@ class DynamicStyleExtension extends DataExtension
 		return $config_styles;
 	}
 	
+	
+	protected function updateResponsiveStyles($config_styles){
+		if( is_array($config_styles) ) {
+			foreach($config_styles as $key => $value){
+				$orginal_style = $config_styles[$key];
+				$original_index = $key;
+				if( is_array($orginal_style) && array_key_exists('Responsive',$orginal_style) ) {
+					$responsive_styles = [];
+					$position = array_search($key, array_keys($config_styles));
+					unset($config_styles[$key]['Responsive']);
+					$style = $config_styles[$key];
+//					Debug::show($original_index);
+					if( is_array($arr_responsive = $orginal_style['Responsive']) ){
+						foreach($arr_responsive as $vp_key => $vp_value){
+							$vp_index = $original_index . $vp_key;
+							$responsive_styles[$vp_index] = array_merge($style,$vp_value);
+							$responsive_styles[$vp_index]['Group'] = $original_index;
+							$responsive_styles[$vp_index]['Title'] = array_key_exists('Title', $vp_value) ? $vp_value['Title'] : $style['Title'] . ' ' . $vp_key;
+						}
+					}
+					// remove original item and insert new reponsive items
+					$result = array_slice($config_styles, 0, $position - 1) + $responsive_styles + array_slice($config_styles, $position + 1);
+ 	  			    $config_styles = $result;
+					
+				}
+			}
+		}
+		return $config_styles;
+	}
 
 	/**
 	* Get all styles from config
@@ -367,7 +424,9 @@ class DynamicStyleExtension extends DataExtension
 		$config_styles = $this->getOwner()->config()->get('extra_styles');
 		$config_styles = $this->getOwner()->updateConfigStyles($config_styles);
 		
-
+		// loop through styles find responsive auto add extra styles as type group
+		$config_styles = $this->updateResponsiveStyles($config_styles);
+		
 		return $config_styles;
 	}
 	
@@ -380,11 +439,13 @@ class DynamicStyleExtension extends DataExtension
 	{
 		$config_styles = $this->getConfigStyles();
 		return self::array_to_styleobjects($config_styles);
+		
+		
 		 
 
 	}
 	/**
-	* Get all styles from config as array of StyleObject::class
+	* Get all styles from ExtraStyle datafield as array of StyleObject::class
 	*
 	* @return array
 	*/	

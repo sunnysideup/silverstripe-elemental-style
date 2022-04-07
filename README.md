@@ -10,9 +10,14 @@ A good example of where you might want extra styles within your template is when
 
 **UPDATES**
 
+- v4.4.2 : Minor updates. Ability to group styles. Responsive helper function to create multiple versions of a single style for different viewports.
 - v4.4.0 : Extra fields are now available. Multiselect, Optionset and ImageOptionset
 - v4.3.0 : Includes front end editing for styles. With almost real time results you can see exactly what your elements will look like with various styles applied. You can also use the back end preview area to access this feature.
  
+**TO DO**
+- move front end editor into iframe
+- improve responsive helper UI
+
 
 ## Requirements
 
@@ -24,8 +29,6 @@ A good example of where you might want extra styles within your template is when
 ```
 composer require jellygnite/silverstripe-elemental-style
 ```
-
-
 
 
 ## Example configurations
@@ -43,6 +46,8 @@ Include the following information in your config:
 - 'Suffix'      : Suffix for the outputted style
 - 'Options'     : Array of options to create different form fields. Slider and Multiselect (listbox) are the available field types.
 - 'Default'     : Allows a default value when nothing is selected in the dropdown field. Note this does not have to exist as an option in the allowed Styles, i.e. it can be whatever you want.
+- 'Group'       : Group multiple styles on one line. Use CamelCase for the Group name as this will also be used as the Group title.
+- 'Responsive'  : This is a helper function to quickly create multiple styles for responsive viewports.
 
 
 ### Method 1
@@ -64,17 +69,27 @@ You can add extra styles to your individual Elements, e.g.
 		'ElementPaddingVertical' => [
 			'Title' => 'Element Padding Vertical',
 			'Description' => 'Adjust the padding on top and bottom sides of the block element',
-			'Tab' => 'Container',
 			'Location' => 'element.class',
+			'Prefix' => 'py-',
 			'Styles' => [
 				'Default' => '',
-				'None' => 'py-0',
-				'X-Small' => 'py-2',
-				'Small' => 'py-4',
-				'Medium' => 'py-6',
-				'Large' => 'py-8',
-				'X-Large' => 'py-9',
-			]
+				'None' => '0',
+				'X-Small' => '2',
+				'Small' => '4',
+				'Medium' => '6',
+				'Large' => '8',
+				'X-Large' => '9',
+			],
+			'Responsive' => [
+				'Mobile' => [
+				],
+				'Tablet' => [
+					'Prefix' => 'py-sm-', // You can override any of the original style options
+				],
+				'Desktop' => [
+					'Prefix' => 'py-lg-',
+				],
+			],
 		],
 		'ElementPaddingTop' => [
 			'Title' => 'Element Padding Top',
@@ -209,6 +224,17 @@ DNADesign\Elemental\Models\BaseElement:
       'Description': 'Set the number of columns for a grid'
       'Location': 'grid'
       'Tab': 'Layout'
+      'Group': 'Grid'
+      'Styles':
+        'Full': 'uk-child-width-1-1'
+        'Two column': 'uk-child-width-1-2'
+        'Three column': 'uk-child-width-1-3'
+    GridTablet:
+      'Title': 'Grid Tablet'
+      'Description': 'Set the number of columns for a grid'
+      'Location': 'grid'
+      'Tab': 'Layout'
+      'Group': 'Grid'
       'Styles':
         'Full': 'uk-child-width-1-1'
         'Two column': 'uk-child-width-1-2'

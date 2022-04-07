@@ -31,3 +31,10 @@
 [data-es-type="checkboxset"] input + span:hover { border-color: #43536d;color: #43536d; }
 [data-es-type="checkboxset"] input:checked + span { border-color: #0060df; background: #0060df;color: #fff; padding-left: 24px;}
 [data-es-type="checkboxset"] input:checked + span::before {content:""; display: inline-block; position: absolute; left:4px; width:18px; height:20px; background-size:contain; background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Cpath fill="none" stroke="%23FFF" stroke-width="12" stroke-miterlimit="10" d="M20,50l20,20l40,-40"/%3E%3C/svg%3E%0A') no-repeat center center;}
+
+
+.form__field-holder.es-fieldgroup { display: flex; align-content: stretch; flex-wrap: wrap;}
+.form__field-holder.es-fieldgroup > .form__fieldgroup-item { flex-grow: 1;flex-basis: 166px;flex-shrink: 1;}
+
+
+
