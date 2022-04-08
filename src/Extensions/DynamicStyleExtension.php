@@ -405,7 +405,7 @@ class DynamicStyleExtension extends DataExtension
 						}
 					}
 					// remove original item and insert new reponsive items
-					$result = array_slice($config_styles, 0, $position - 1) + $responsive_styles + array_slice($config_styles, $position + 1);
+					$result = array_slice($config_styles, 0, $position) + $responsive_styles + array_slice($config_styles, $position + 1);
  	  			    $config_styles = $result;
 					
 				}

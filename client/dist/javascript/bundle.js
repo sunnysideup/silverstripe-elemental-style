@@ -28,7 +28,19 @@
 		}); // end data-es-type
 		
 		$('[data-extrastyle]').entwine({
+			setNonEmptyClass: function() {
+				element = $(this);
+				if($(this).val()!=''){
+					$(this).addClass('nonempty');
+				} else {
+					$(this).removeClass('nonempty');			
+				}
+			},
+			onmatch: function() {
+				$(this).setNonEmptyClass();
+			},
 			onchange: function() {
+				$(this).setNonEmptyClass();
 				var $extraStyleField = $(this).getextrastylefield();
 				var $extraStyleOutputField = $(this).getextrastyleoutputfield();
 				if( $extraStyleField.length ){
