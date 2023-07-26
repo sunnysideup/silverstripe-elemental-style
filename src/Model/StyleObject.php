@@ -86,7 +86,7 @@ class StyleObject implements \JsonSerializable {
         $this->group = $arr_style['Group'];
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array(
              'Index' => $this->getIndex(),
