@@ -1,5 +1,5 @@
 {
-    "name": "jellygnite/silverstripe-elemental-style",
+    "name": "sunnysideup/silverstripe-elemental-style",
     "description": "Dynamic styling for elemental blocks.",
     "type": "silverstripe-vendormodule",
     "keywords": [
