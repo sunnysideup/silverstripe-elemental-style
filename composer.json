@@ -9,9 +9,8 @@
     "license": "BSD-3-Clause",
     "require": {
         "silverstripe/framework": "^4.0 || ^5.0",
-        "silverstripe/admin": "^1.0 || ^2.0",
-        "dnadesign/silverstripe-elemental": "^4.0 || ^5.0",
-        "jellygnite/silverstripe-sliderfield": "*"
+        "dnadesign/silverstripe-elemental": "*",
+        "jellygnite/silverstripe-sliderfield": "dev-feature/CMS-5"
     },
     "autoload": {
         "psr-4": {
